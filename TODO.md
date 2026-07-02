@@ -30,8 +30,8 @@ Initial focus:
 - [x] Define the project purpose.
 - [x] Create initial project documentation.
 - [x] Decide the first implementation milestone.
-- [ ] Decide the initial Ruby package layout after the first milestone is clear.
-- [ ] Decide how to organize learning notes.
+- [x] Decide the initial Ruby package layout after the first milestone is clear.
+- [x] Decide how to organize learning notes.
 
 First implementation milestone:
 
@@ -42,14 +42,14 @@ First implementation milestone:
 
 ### 1. Minimal Interpolation Renderer
 
-- [ ] Create the initial Ruby project structure.
-- [ ] Add a minimal template rendering entry point.
-- [ ] Render plain text unchanged.
-- [ ] Replace `{{ name }}` with a value from the render context.
-- [ ] Decide behavior for missing variables.
-- [ ] Add small examples or tests for successful interpolation.
-- [ ] Add examples or tests for malformed interpolation markers.
-- [ ] Document the first source-to-output lifecycle.
+- [x] Create the initial Ruby project structure.
+- [x] Add a minimal template rendering entry point.
+- [x] Render plain text unchanged.
+- [x] Replace `{{ name }}` with a value from the render context.
+- [x] Decide behavior for missing variables.
+- [x] Add small examples or tests for successful interpolation.
+- [x] Add examples or tests for malformed interpolation markers.
+- [x] Document the first source-to-output lifecycle.
 
 Questions to answer:
 
@@ -200,3 +200,13 @@ changes.
 - First implementation milestone: start with plain text and simple
   interpolation before introducing lexer, parser, AST, escaping, control flow,
   partials, compilation, or caching.
+- Added the initial Ruby layout with `lib/tpeg.rb`, `lib/tpeg/template.rb`, and
+  `test/`.
+- Added `Tpeg.render(source, context)` and `Tpeg::Template#render` as the first
+  minimal rendering API.
+- Implemented plain text rendering and simple `{{ name }}` interpolation using
+  `StringScanner`.
+- Decided that missing variables and malformed interpolation markers should
+  raise explicit `Tpeg` errors in the first implementation.
+- Documented the first source-to-output lifecycle in
+  `docs/minimal-interpolation.md`.

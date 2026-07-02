@@ -84,15 +84,29 @@ than treated as fixed.
 
 ## Running the Current Engine
 
-The implementation has not started yet.
+The current implementation is a minimal interpolation renderer.
 
-The first implementation milestone is expected to create a minimal Ruby entry
-point that can render a template string with a small hash-like context. Exact
-commands and package layout should be documented here once the first milestone
-is implemented.
+Run a small example:
+
+```sh
+ruby -Ilib -e 'require "tpeg"; puts Tpeg.render("Hello, {{ name }}!", name: "Ruby")'
+```
+
+Run the tests:
+
+```sh
+ruby -Itest -Ilib test/tpeg_test.rb
+```
+
+The renderer walks through the template source, copies plain text unchanged,
+and replaces simple interpolation markers such as `{{ name }}` from a
+hash-like context. Missing variables and malformed interpolation markers raise
+explicit `Tpeg` errors instead of silently rendering empty output.
 
 ## Project Documents
 
 - `README.md`: project purpose, scope, and high-level learning direction.
 - `AGENTS.md`: working instructions for AI agents and future contributors.
 - `TODO.md`: living learning roadmap and progress tracker.
+- `docs/minimal-interpolation.md`: notes on the first plain text and
+  interpolation rendering step.
