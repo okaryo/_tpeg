@@ -64,7 +64,7 @@ Questions to answer:
 
 ### 2. Scanner And Lexer
 
-- [ ] Track byte offsets, line numbers, and column numbers.
+- [x] Track byte offsets, line numbers, and column numbers.
 - [x] Split source into text and interpolation tokens.
 - [x] Preserve text exactly outside template delimiters.
 - [x] Detect unterminated delimiters.
@@ -218,3 +218,5 @@ changes.
   changing renderer behavior yet.
 - The lexer now emits `:text` and `:interpolation` tokens, preserves text
   outside delimiters, and reports delimiter-level syntax errors.
+- Added source positions to tokens: zero-based byte offsets and one-based line
+  and column numbers.

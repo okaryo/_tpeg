@@ -8,6 +8,13 @@ Current token types:
 - `:text`: plain source text outside template delimiters.
 - `:interpolation`: source text between `{{` and `}}`.
 
+Each token carries:
+
+- `start_offset`: zero-based byte offset where the token value starts.
+- `end_offset`: zero-based byte offset just after the token value.
+- `line`: one-based line number where the token value starts.
+- `column`: one-based column number where the token value starts.
+
 For now, interpolation token values keep the inner whitespace unchanged. For
 example, `{{ name }}` produces an interpolation token with the value ` name `.
 Trimming and validating the expression still belongs to the renderer in the
@@ -27,6 +34,5 @@ The lexer does detect delimiter-level syntax errors:
 
 Useful next steps are:
 
-- Add source positions to tokens.
 - Move the renderer from direct source scanning to lexer tokens.
 - Decide where interpolation whitespace trimming should live.
