@@ -18,6 +18,9 @@ performance tradeoffs.
 ## Working Style
 
 - Proceed step by step.
+- Treat a request to proceed to the next step as permission to advance one small
+  learning unit, not to complete an entire roadmap section, unless the user
+  explicitly asks for a full section.
 - Before a major implementation step, clarify the specific learning objective.
 - After a meaningful implementation step, summarize what was learned and what
   remains unclear.

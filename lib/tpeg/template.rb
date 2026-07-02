@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 require "strscan"
+require_relative "errors"
 
 module Tpeg
-  class Error < StandardError; end
-  class SyntaxError < Error; end
-  class MissingVariable < Error; end
-
   class Template
     IDENTIFIER = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
 

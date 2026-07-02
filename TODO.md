@@ -25,6 +25,10 @@ Initial focus:
 
 ## Roadmap
 
+Roadmap sections are learning themes, not single work units. When moving the
+project forward, advance by one small learning unit at a time unless a larger
+scope is explicitly requested.
+
 ### 0. Project Setup
 
 - [x] Define the project purpose.
@@ -61,11 +65,11 @@ Questions to answer:
 ### 2. Scanner And Lexer
 
 - [ ] Track byte offsets, line numbers, and column numbers.
-- [ ] Split source into text and interpolation tokens.
-- [ ] Preserve text exactly outside template delimiters.
-- [ ] Detect unterminated delimiters.
+- [x] Split source into text and interpolation tokens.
+- [x] Preserve text exactly outside template delimiters.
+- [x] Detect unterminated delimiters.
 - [ ] Decide whitespace behavior around delimiters.
-- [ ] Add tests for adjacent tokens, multiline templates, and malformed source.
+- [x] Add tests for adjacent tokens, multiline templates, and malformed source.
 
 Questions to answer:
 
@@ -210,3 +214,7 @@ changes.
   raise explicit `Tpeg` errors in the first implementation.
 - Documented the first source-to-output lifecycle in
   `docs/minimal-interpolation.md`.
+- Added `Tpeg::Lexer` and `Tpeg::Token` as the first lexer boundary without
+  changing renderer behavior yet.
+- The lexer now emits `:text` and `:interpolation` tokens, preserves text
+  outside delimiters, and reports delimiter-level syntax errors.

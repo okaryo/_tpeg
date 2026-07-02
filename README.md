@@ -95,7 +95,7 @@ ruby -Ilib -e 'require "tpeg"; puts Tpeg.render("Hello, {{ name }}!", name: "Rub
 Run the tests:
 
 ```sh
-ruby -Itest -Ilib test/tpeg_test.rb
+ruby -Itest -Ilib -e 'Dir["test/**/*_test.rb"].sort.each { |path| load path }'
 ```
 
 The renderer walks through the template source, copies plain text unchanged,
@@ -110,3 +110,5 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `TODO.md`: living learning roadmap and progress tracker.
 - `docs/minimal-interpolation.md`: notes on the first plain text and
   interpolation rendering step.
+- `docs/lexer.md`: notes on the first text and interpolation tokenization
+  boundary.
