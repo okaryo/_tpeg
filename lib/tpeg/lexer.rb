@@ -33,7 +33,8 @@ module Tpeg
         interpolation_end = @source.index("}}", interpolation_start)
         raise SyntaxError, "unterminated interpolation" if interpolation_end.nil?
 
-        tokens << token(:interpolation, @source[interpolation_start...interpolation_end], interpolation_start, interpolation_end)
+        value, value_start, value_end = interpolation_value(interpolation_start, interpolation_end)
+        tokens << token(:interpolation, value, value_start, value_end)
 
         cursor = interpolation_end + 2
       end
@@ -54,6 +55,19 @@ module Tpeg
         line: line,
         column: column
       )
+    end
+
+    def interpolation_value(start_index, end_index)
+      raw_value = @source[start_index...end_index]
+      leading_whitespace = raw_value.length - raw_value.lstrip.length
+      trailing_whitespace = raw_value.length - raw_value.rstrip.length
+
+      value_start = start_index + leading_whitespace
+      value_end = end_index - trailing_whitespace
+      value_end = value_start if value_end < value_start
+      value = @source[value_start...value_end]
+
+      [value, value_start, value_end]
     end
 
     def byte_offset(index)

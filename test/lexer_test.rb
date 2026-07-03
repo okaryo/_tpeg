@@ -13,15 +13,15 @@ class LexerTest < Minitest::Test
     tokens = Tpeg::Lexer.new("Hello, {{ name }}!").tokens
 
     assert_token tokens[0], type: :text, value: "Hello, ", start_offset: 0, end_offset: 7, line: 1, column: 1
-    assert_token tokens[1], type: :interpolation, value: " name ", start_offset: 9, end_offset: 15, line: 1, column: 10
+    assert_token tokens[1], type: :interpolation, value: "name", start_offset: 10, end_offset: 14, line: 1, column: 11
     assert_token tokens[2], type: :text, value: "!", start_offset: 17, end_offset: 18, line: 1, column: 18
   end
 
   def test_tokenizes_adjacent_interpolations
     tokens = Tpeg::Lexer.new("{{ a }}{{ b }}").tokens
 
-    assert_token tokens[0], type: :interpolation, value: " a ", start_offset: 2, end_offset: 5, line: 1, column: 3
-    assert_token tokens[1], type: :interpolation, value: " b ", start_offset: 9, end_offset: 12, line: 1, column: 10
+    assert_token tokens[0], type: :interpolation, value: "a", start_offset: 3, end_offset: 4, line: 1, column: 4
+    assert_token tokens[1], type: :interpolation, value: "b", start_offset: 10, end_offset: 11, line: 1, column: 11
   end
 
   def test_preserves_text_between_delimiters
@@ -34,8 +34,20 @@ class LexerTest < Minitest::Test
   def test_tracks_multiline_token_positions
     tokens = Tpeg::Lexer.new("a\n  {{ name }}\n b").tokens
 
-    assert_token tokens[1], type: :interpolation, value: " name ", start_offset: 6, end_offset: 12, line: 2, column: 5
+    assert_token tokens[1], type: :interpolation, value: "name", start_offset: 7, end_offset: 11, line: 2, column: 6
     assert_token tokens[2], type: :text, value: "\n b", start_offset: 14, end_offset: 17, line: 2, column: 13
+  end
+
+  def test_trims_multiline_interpolation_whitespace
+    tokens = Tpeg::Lexer.new("{{\n  name\n}}").tokens
+
+    assert_token tokens[0], type: :interpolation, value: "name", start_offset: 5, end_offset: 9, line: 2, column: 3
+  end
+
+  def test_whitespace_only_interpolation_becomes_empty_token
+    tokens = Tpeg::Lexer.new("{{   }}").tokens
+
+    assert_token tokens[0], type: :interpolation, value: "", start_offset: 5, end_offset: 5, line: 1, column: 6
   end
 
   def test_raises_for_unterminated_interpolation

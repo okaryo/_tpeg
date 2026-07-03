@@ -15,10 +15,11 @@ Each token carries:
 - `line`: one-based line number where the token value starts.
 - `column`: one-based column number where the token value starts.
 
-For now, interpolation token values keep the inner whitespace unchanged. For
-example, `{{ name }}` produces an interpolation token with the value ` name `.
-Trimming and validating the expression still belongs to the renderer in the
-current implementation.
+Interpolation token values trim surrounding whitespace inside the delimiters.
+For example, `{{ name }}` produces an interpolation token with the value `name`.
+The token position points at the trimmed value, not at the opening delimiter.
+Validating the expression still belongs to the renderer in the current
+implementation.
 
 ## Current Scope
 
@@ -35,4 +36,3 @@ The lexer does detect delimiter-level syntax errors:
 Useful next steps are:
 
 - Move the renderer from direct source scanning to lexer tokens.
-- Decide where interpolation whitespace trimming should live.

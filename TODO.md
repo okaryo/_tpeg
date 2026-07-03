@@ -68,7 +68,7 @@ Questions to answer:
 - [x] Split source into text and interpolation tokens.
 - [x] Preserve text exactly outside template delimiters.
 - [x] Detect unterminated delimiters.
-- [ ] Decide whitespace behavior around delimiters.
+- [x] Decide whitespace behavior around delimiters.
 - [x] Add tests for adjacent tokens, multiline templates, and malformed source.
 
 Questions to answer:
@@ -220,3 +220,5 @@ changes.
   outside delimiters, and reports delimiter-level syntax errors.
 - Added source positions to tokens: zero-based byte offsets and one-based line
   and column numbers.
+- Decided that interpolation token values trim surrounding delimiter whitespace,
+  while text tokens preserve source text exactly.
