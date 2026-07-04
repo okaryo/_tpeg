@@ -98,7 +98,7 @@ Questions to answer:
 - [x] Define context lookup behavior for symbols and strings.
 - [x] Support nested lookup such as `user.name` if it remains useful.
 - [x] Decide behavior for hashes, objects, and method calls.
-- [ ] Add a scoped context model for future loops and partials.
+- [x] Add a scoped context model for future loops and partials.
 - [x] Avoid accidental mutation of user-provided context data.
 
 Questions to answer:
@@ -240,3 +240,5 @@ changes.
   initialization.
 - Added dot-separated nested lookup through hash-like values, without calling
   arbitrary Ruby object methods.
+- Added `RenderContext#with_locals` for child scopes that can shadow parent
+  top-level values and fall back to parent lookup.

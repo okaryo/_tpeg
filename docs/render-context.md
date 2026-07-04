@@ -19,6 +19,10 @@ example, `{{ user.name }}` first resolves `user`, then resolves `name` inside
 that value. Each path segment uses the same string-key-then-symbol-key behavior.
 Arbitrary Ruby method calls are not used.
 
+`RenderContext#with_locals` creates a child context. Lookup checks the child
+scope first, then falls back to the parent scope when the top-level key is not
+defined locally. A local top-level key shadows the same parent key.
+
 ## Current Scope
 
 The render context currently expects a hash-like object that responds to
@@ -31,7 +35,6 @@ rendering. Nested values are not deep-copied.
 It does not support:
 
 - Calling methods on arbitrary Ruby objects.
-- Scoped lookup for loops or partials.
 - Deep-copying nested context data.
 
 Those behaviors should be introduced only when the template language needs

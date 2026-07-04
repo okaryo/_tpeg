@@ -79,4 +79,32 @@ class RenderContextTest < Minitest::Test
 
     assert_equal "Ruby", context.lookup("name")
   end
+
+  def test_child_context_looks_up_local_value
+    context = Tpeg::RenderContext.new({}).with_locals(name: "Ruby")
+
+    assert_equal "Ruby", context.lookup("name")
+  end
+
+  def test_child_context_falls_back_to_parent
+    context = Tpeg::RenderContext.new(name: "Ruby").with_locals({})
+
+    assert_equal "Ruby", context.lookup("name")
+  end
+
+  def test_child_context_prefers_local_value_over_parent
+    context = Tpeg::RenderContext.new(name: "Parent").with_locals(name: "Local")
+
+    assert_equal "Local", context.lookup("name")
+  end
+
+  def test_child_context_local_top_level_key_shadows_parent_nested_value
+    context = Tpeg::RenderContext.new(user: { name: "Parent" }).with_locals(user: {})
+
+    error = assert_raises(Tpeg::MissingVariable) do
+      context.lookup("user.name")
+    end
+
+    assert_equal "missing variable: user.name", error.message
+  end
 end
