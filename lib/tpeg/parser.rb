@@ -7,7 +7,7 @@ module Tpeg
   VariableNode = Struct.new(:name, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
   class Parser
-    IDENTIFIER = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
+    VARIABLE_PATH = /\A[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*\z/.freeze
 
     def initialize(tokens)
       @tokens = tokens
@@ -33,7 +33,7 @@ module Tpeg
 
     def validate_variable_name(name)
       raise SyntaxError, "empty interpolation" if name.empty?
-      return if IDENTIFIER.match?(name)
+      return if VARIABLE_PATH.match?(name)
 
       raise SyntaxError, "invalid variable name: #{name.inspect}"
     end

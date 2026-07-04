@@ -96,7 +96,7 @@ Questions to answer:
 ### 4. Rendering Context
 
 - [x] Define context lookup behavior for symbols and strings.
-- [ ] Support nested lookup such as `user.name` if it remains useful.
+- [x] Support nested lookup such as `user.name` if it remains useful.
 - [x] Decide behavior for hashes, objects, and method calls.
 - [ ] Add a scoped context model for future loops and partials.
 - [x] Avoid accidental mutation of user-provided context data.
@@ -238,3 +238,5 @@ changes.
   arbitrary object method calls are not supported yet.
 - Render context now shallow-copies and freezes top-level context values on
   initialization.
+- Added dot-separated nested lookup through hash-like values, without calling
+  arbitrary Ruby object methods.

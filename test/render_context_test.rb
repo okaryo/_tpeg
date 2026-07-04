@@ -21,6 +21,18 @@ class RenderContextTest < Minitest::Test
     assert_equal "String Ruby", context.lookup("name")
   end
 
+  def test_looks_up_nested_string_keys
+    context = Tpeg::RenderContext.new("user" => { "name" => "Ruby" })
+
+    assert_equal "Ruby", context.lookup("user.name")
+  end
+
+  def test_looks_up_nested_symbol_keys
+    context = Tpeg::RenderContext.new(user: { name: "Ruby" })
+
+    assert_equal "Ruby", context.lookup("user.name")
+  end
+
   def test_raises_for_missing_variable
     context = Tpeg::RenderContext.new({})
 
@@ -29,6 +41,26 @@ class RenderContextTest < Minitest::Test
     end
 
     assert_equal "missing variable: name", error.message
+  end
+
+  def test_raises_for_missing_nested_variable
+    context = Tpeg::RenderContext.new(user: {})
+
+    error = assert_raises(Tpeg::MissingVariable) do
+      context.lookup("user.name")
+    end
+
+    assert_equal "missing variable: user.name", error.message
+  end
+
+  def test_raises_when_nested_value_is_not_hash_like
+    context = Tpeg::RenderContext.new(user: "Ruby")
+
+    error = assert_raises(Tpeg::MissingVariable) do
+      context.lookup("user.name")
+    end
+
+    assert_equal "missing variable: user.name", error.message
   end
 
   def test_raises_for_invalid_context

@@ -14,6 +14,11 @@ context.
 If both keys exist, the string key wins. This keeps lookup deterministic while
 still accepting the common Ruby hash styles.
 
+Dot-separated names perform nested lookup through hash-like values. For
+example, `{{ user.name }}` first resolves `user`, then resolves `name` inside
+that value. Each path segment uses the same string-key-then-symbol-key behavior.
+Arbitrary Ruby method calls are not used.
+
 ## Current Scope
 
 The render context currently expects a hash-like object that responds to
@@ -25,7 +30,6 @@ rendering. Nested values are not deep-copied.
 
 It does not support:
 
-- Nested lookup such as `user.name`.
 - Calling methods on arbitrary Ruby objects.
 - Scoped lookup for loops or partials.
 - Deep-copying nested context data.

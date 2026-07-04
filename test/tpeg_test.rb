@@ -23,6 +23,10 @@ class TpegTest < Minitest::Test
     assert_equal "count: 3", Tpeg.render("count: {{ count }}", count: 3)
   end
 
+  def test_interpolates_nested_hash_value
+    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ user.name }}!", user: { name: "Ruby" })
+  end
+
   def test_raises_for_missing_variable
     error = assert_raises(Tpeg::MissingVariable) do
       Tpeg.render("Hello, {{ name }}!")
@@ -57,10 +61,10 @@ class TpegTest < Minitest::Test
 
   def test_raises_for_invalid_variable_name
     error = assert_raises(Tpeg::SyntaxError) do
-      Tpeg.render("Hello, {{ user.name }}!", "user.name" => "Ruby")
+      Tpeg.render("Hello, {{ user..name }}!", user: { name: "Ruby" })
     end
 
-    assert_equal 'invalid variable name: "user.name"', error.message
+    assert_equal 'invalid variable name: "user..name"', error.message
   end
 
   def test_raises_for_invalid_context
