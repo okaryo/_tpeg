@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "strscan"
 require_relative "errors"
+require_relative "lexer"
 
 module Tpeg
   class Template
@@ -12,17 +12,10 @@ module Tpeg
     end
 
     def render(context = {})
-      scanner = StringScanner.new(@source)
       output = +""
 
-      until scanner.eos?
-        if scanner.scan(/{{/)
-          output << render_interpolation(scanner, context)
-        elsif scanner.scan(/}}/)
-          raise SyntaxError, "unexpected closing delimiter"
-        else
-          output << scanner.getch
-        end
+      Lexer.new(@source).tokens.each do |token|
+        output << render_token(token, context)
       end
 
       output
@@ -30,11 +23,18 @@ module Tpeg
 
     private
 
-    def render_interpolation(scanner, context)
-      expression = scanner.scan_until(/}}/)
-      raise SyntaxError, "unterminated interpolation" if expression.nil?
+    def render_token(token, context)
+      case token.type
+      when :text
+        token.value
+      when :interpolation
+        render_interpolation(token.value, context)
+      else
+        raise Error, "unknown token type: #{token.type.inspect}"
+      end
+    end
 
-      name = expression[0...-2].strip
+    def render_interpolation(name, context)
       validate_variable_name(name)
 
       lookup(context, name).to_s

@@ -23,8 +23,9 @@ implementation.
 
 ## Current Scope
 
-This step only introduces tokenization. The existing renderer still scans the
-source directly, so rendering behavior is unchanged.
+The renderer consumes lexer tokens, so source scanning is centralized in the
+lexer. Expression validation and context lookup still belong to the renderer
+until a parser or template representation is introduced.
 
 The lexer does detect delimiter-level syntax errors:
 
@@ -35,4 +36,4 @@ The lexer does detect delimiter-level syntax errors:
 
 Useful next steps are:
 
-- Move the renderer from direct source scanning to lexer tokens.
+- Introduce a parser or template representation above lexer tokens.

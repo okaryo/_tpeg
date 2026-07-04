@@ -222,3 +222,5 @@ changes.
   and column numbers.
 - Decided that interpolation token values trim surrounding delimiter whitespace,
   while text tokens preserve source text exactly.
+- Updated the renderer to consume lexer tokens instead of scanning the source
+  directly.
