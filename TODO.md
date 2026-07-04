@@ -95,7 +95,7 @@ Questions to answer:
 
 ### 4. Rendering Context
 
-- [ ] Define context lookup behavior for symbols and strings.
+- [x] Define context lookup behavior for symbols and strings.
 - [ ] Support nested lookup such as `user.name` if it remains useful.
 - [ ] Decide behavior for hashes, objects, and method calls.
 - [ ] Add a scoped context model for future loops and partials.
@@ -232,3 +232,5 @@ changes.
   `source -> lexer tokens -> parser nodes -> rendered output`.
 - Moved variable name validation into the parser, leaving missing context values
   as rendering errors.
+- Added `Tpeg::RenderContext` to centralize string-key and symbol-key variable
+  lookup during rendering.

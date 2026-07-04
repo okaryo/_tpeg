@@ -3,6 +3,7 @@
 require_relative "errors"
 require_relative "lexer"
 require_relative "parser"
+require_relative "render_context"
 
 module Tpeg
   class Template
@@ -11,10 +12,11 @@ module Tpeg
     end
 
     def render(context = {})
+      render_context = RenderContext.new(context)
       output = +""
 
       Parser.new(Lexer.new(@source).tokens).nodes.each do |node|
-        output << render_node(node, context)
+        output << render_node(node, render_context)
       end
 
       output
@@ -22,28 +24,19 @@ module Tpeg
 
     private
 
-    def render_node(node, context)
+    def render_node(node, render_context)
       case node
       when TextNode
         node.value
       when VariableNode
-        render_interpolation(node.name, context)
+        render_interpolation(node.name, render_context)
       else
         raise Error, "unknown node type: #{node.class}"
       end
     end
 
-    def render_interpolation(name, context)
-      lookup(context, name).to_s
-    end
-
-    def lookup(context, name)
-      return context[name] if context.respond_to?(:key?) && context.key?(name)
-
-      symbol_name = name.to_sym
-      return context[symbol_name] if context.respond_to?(:key?) && context.key?(symbol_name)
-
-      raise MissingVariable, "missing variable: #{name}"
+    def render_interpolation(name, render_context)
+      render_context.lookup(name).to_s
     end
   end
 end
