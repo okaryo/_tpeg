@@ -80,11 +80,11 @@ Questions to answer:
 
 ### 3. Parser And Template Representation
 
-- [ ] Define a small AST or render instruction model.
-- [ ] Parse text tokens into text nodes.
-- [ ] Parse interpolation tokens into variable lookup nodes.
+- [x] Define a small AST or render instruction model.
+- [x] Parse text tokens into text nodes.
+- [x] Parse interpolation tokens into variable lookup nodes.
 - [ ] Separate parsing errors from rendering errors.
-- [ ] Add tests for parser boundaries and invalid token sequences.
+- [x] Add tests for parser boundaries and invalid token sequences.
 
 Questions to answer:
 
@@ -224,3 +224,7 @@ changes.
   while text tokens preserve source text exactly.
 - Updated the renderer to consume lexer tokens instead of scanning the source
   directly.
+- Added `Tpeg::Parser`, `TextNode`, and `VariableNode` as the first
+  token-to-node template representation.
+- Parser nodes copy source positions from lexer tokens, but variable name
+  validation still belongs to the renderer for now.

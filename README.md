@@ -112,3 +112,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
   interpolation rendering step.
 - `docs/lexer.md`: notes on the first text and interpolation tokenization
   boundary.
+- `docs/parser.md`: notes on the first token-to-node parser boundary.
