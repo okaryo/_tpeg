@@ -97,7 +97,7 @@ Questions to answer:
 
 - [x] Define context lookup behavior for symbols and strings.
 - [ ] Support nested lookup such as `user.name` if it remains useful.
-- [ ] Decide behavior for hashes, objects, and method calls.
+- [x] Decide behavior for hashes, objects, and method calls.
 - [ ] Add a scoped context model for future loops and partials.
 - [ ] Avoid accidental mutation of user-provided context data.
 
@@ -234,3 +234,5 @@ changes.
   as rendering errors.
 - Added `Tpeg::RenderContext` to centralize string-key and symbol-key variable
   lookup during rendering.
+- Decided that rendering context must be hash-like (`key?` and `[]`), and that
+  arbitrary object method calls are not supported yet.

@@ -17,7 +17,7 @@ still accepting the common Ruby hash styles.
 ## Current Scope
 
 The render context currently expects a hash-like object that responds to
-`key?` and `[]`.
+`key?` and `[]`. Passing any other object raises `Tpeg::InvalidContext`.
 
 It does not support:
 

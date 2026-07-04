@@ -4,4 +4,5 @@ module Tpeg
   class Error < StandardError; end
   class SyntaxError < Error; end
   class MissingVariable < Error; end
+  class InvalidContext < Error; end
 end

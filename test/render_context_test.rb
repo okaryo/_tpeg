@@ -30,4 +30,12 @@ class RenderContextTest < Minitest::Test
 
     assert_equal "missing variable: name", error.message
   end
+
+  def test_raises_for_invalid_context
+    error = assert_raises(Tpeg::InvalidContext) do
+      Tpeg::RenderContext.new(Object.new)
+    end
+
+    assert_equal "render context must respond to key? and []", error.message
+  end
 end

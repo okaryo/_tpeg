@@ -62,4 +62,12 @@ class TpegTest < Minitest::Test
 
     assert_equal 'invalid variable name: "user.name"', error.message
   end
+
+  def test_raises_for_invalid_context
+    error = assert_raises(Tpeg::InvalidContext) do
+      Tpeg.render("Hello, {{ name }}!", Object.new)
+    end
+
+    assert_equal "render context must respond to key? and []", error.message
+  end
 end

@@ -5,6 +5,10 @@ require_relative "errors"
 module Tpeg
   class RenderContext
     def initialize(values)
+      unless values.respond_to?(:key?) && values.respond_to?(:[])
+        raise InvalidContext, "render context must respond to key? and []"
+      end
+
       @values = values
     end
 
@@ -20,7 +24,7 @@ module Tpeg
     private
 
     def key?(name)
-      @values.respond_to?(:key?) && @values.key?(name)
+      @values.key?(name)
     end
   end
 end
