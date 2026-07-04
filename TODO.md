@@ -228,3 +228,5 @@ changes.
   token-to-node template representation.
 - Parser nodes copy source positions from lexer tokens, but variable name
   validation still belongs to the renderer for now.
+- Updated the renderer to consume parser nodes, making the current pipeline
+  `source -> lexer tokens -> parser nodes -> rendered output`.

@@ -2,6 +2,7 @@
 
 require_relative "errors"
 require_relative "lexer"
+require_relative "parser"
 
 module Tpeg
   class Template
@@ -14,8 +15,8 @@ module Tpeg
     def render(context = {})
       output = +""
 
-      Lexer.new(@source).tokens.each do |token|
-        output << render_token(token, context)
+      Parser.new(Lexer.new(@source).tokens).nodes.each do |node|
+        output << render_node(node, context)
       end
 
       output
@@ -23,14 +24,14 @@ module Tpeg
 
     private
 
-    def render_token(token, context)
-      case token.type
-      when :text
-        token.value
-      when :interpolation
-        render_interpolation(token.value, context)
+    def render_node(node, context)
+      case node
+      when TextNode
+        node.value
+      when VariableNode
+        render_interpolation(node.name, context)
       else
-        raise Error, "unknown token type: #{token.type.inspect}"
+        raise Error, "unknown node type: #{node.class}"
       end
     end
 

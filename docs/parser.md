@@ -22,12 +22,17 @@ interpolation still becomes a `VariableNode` with an empty name. Name validation
 and context lookup still happen in the renderer until the expression grammar is
 clearer.
 
-The renderer does not consume parser nodes yet. This step only introduces the
-template representation boundary.
+The renderer consumes parser nodes, so the current flow is:
+
+```text
+source -> lexer tokens -> parser nodes -> rendered output
+```
+
+This keeps source scanning and template representation separate from rendering
+context lookup.
 
 ## Next Boundary
 
 Useful next steps are:
 
-- Move the renderer from lexer tokens to parser nodes.
 - Decide whether variable name validation belongs in the parser.
