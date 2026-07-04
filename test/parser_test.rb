@@ -24,6 +24,22 @@ class ParserTest < Minitest::Test
     assert_variable_node nodes[1], name: "name", start_offset: 7, end_offset: 11, line: 2, column: 6
   end
 
+  def test_raises_for_empty_interpolation
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello, {{ }}!")
+    end
+
+    assert_equal "empty interpolation", error.message
+  end
+
+  def test_raises_for_invalid_variable_name
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello, {{ user.name }}!")
+    end
+
+    assert_equal 'invalid variable name: "user.name"', error.message
+  end
+
   def test_raises_for_unknown_token_type
     token = Tpeg::Token.new(type: :unknown, value: "x", start_offset: 0, end_offset: 1, line: 1, column: 1)
 

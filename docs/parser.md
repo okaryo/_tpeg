@@ -17,10 +17,9 @@ able to point at the parsed value rather than re-reading the source.
 
 ## Current Scope
 
-The parser does not validate variable names yet. A token such as an empty
-interpolation still becomes a `VariableNode` with an empty name. Name validation
-and context lookup still happen in the renderer until the expression grammar is
-clearer.
+The parser validates variable names before creating `VariableNode` values.
+Empty interpolation markers and invalid names are parsing errors. Context lookup
+still happens in the renderer, so missing variables remain rendering errors.
 
 The renderer consumes parser nodes, so the current flow is:
 
@@ -35,4 +34,4 @@ context lookup.
 
 Useful next steps are:
 
-- Decide whether variable name validation belongs in the parser.
+- Add richer syntax error objects that include node or token source positions.

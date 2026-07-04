@@ -83,7 +83,7 @@ Questions to answer:
 - [x] Define a small AST or render instruction model.
 - [x] Parse text tokens into text nodes.
 - [x] Parse interpolation tokens into variable lookup nodes.
-- [ ] Separate parsing errors from rendering errors.
+- [x] Separate parsing errors from rendering errors.
 - [x] Add tests for parser boundaries and invalid token sequences.
 
 Questions to answer:
@@ -230,3 +230,5 @@ changes.
   validation still belongs to the renderer for now.
 - Updated the renderer to consume parser nodes, making the current pipeline
   `source -> lexer tokens -> parser nodes -> rendered output`.
+- Moved variable name validation into the parser, leaving missing context values
+  as rendering errors.

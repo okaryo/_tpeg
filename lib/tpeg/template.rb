@@ -6,8 +6,6 @@ require_relative "parser"
 
 module Tpeg
   class Template
-    IDENTIFIER = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
-
     def initialize(source)
       @source = String(source)
     end
@@ -36,16 +34,7 @@ module Tpeg
     end
 
     def render_interpolation(name, context)
-      validate_variable_name(name)
-
       lookup(context, name).to_s
-    end
-
-    def validate_variable_name(name)
-      raise SyntaxError, "empty interpolation" if name.empty?
-      return if IDENTIFIER.match?(name)
-
-      raise SyntaxError, "invalid variable name: #{name.inspect}"
     end
 
     def lookup(context, name)

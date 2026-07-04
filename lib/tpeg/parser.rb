@@ -7,6 +7,8 @@ module Tpeg
   VariableNode = Struct.new(:name, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
   class Parser
+    IDENTIFIER = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
+
     def initialize(tokens)
       @tokens = tokens
     end
@@ -22,10 +24,18 @@ module Tpeg
       when :text
         TextNode.new(**source_fields(token), value: token.value)
       when :interpolation
+        validate_variable_name(token.value)
         VariableNode.new(**source_fields(token), name: token.value)
       else
         raise SyntaxError, "unknown token type: #{token.type.inspect}"
       end
+    end
+
+    def validate_variable_name(name)
+      raise SyntaxError, "empty interpolation" if name.empty?
+      return if IDENTIFIER.match?(name)
+
+      raise SyntaxError, "invalid variable name: #{name.inspect}"
     end
 
     def source_fields(token)
