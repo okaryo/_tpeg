@@ -19,12 +19,16 @@ still accepting the common Ruby hash styles.
 The render context currently expects a hash-like object that responds to
 `key?` and `[]`. Passing any other object raises `Tpeg::InvalidContext`.
 
+The context is shallow-copied when `RenderContext` is initialized. This keeps
+later changes to the top-level input hash from changing lookup behavior during
+rendering. Nested values are not deep-copied.
+
 It does not support:
 
 - Nested lookup such as `user.name`.
 - Calling methods on arbitrary Ruby objects.
 - Scoped lookup for loops or partials.
-- Mutation of context data.
+- Deep-copying nested context data.
 
 Those behaviors should be introduced only when the template language needs
 them.

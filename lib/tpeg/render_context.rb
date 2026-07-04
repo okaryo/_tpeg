@@ -9,7 +9,7 @@ module Tpeg
         raise InvalidContext, "render context must respond to key? and []"
       end
 
-      @values = values
+      @values = values.dup.freeze
     end
 
     def lookup(name)

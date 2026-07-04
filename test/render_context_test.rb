@@ -38,4 +38,13 @@ class RenderContextTest < Minitest::Test
 
     assert_equal "render context must respond to key? and []", error.message
   end
+
+  def test_copies_context_values_on_initialize
+    values = { name: "Ruby" }
+    context = Tpeg::RenderContext.new(values)
+
+    values[:name] = "Changed"
+
+    assert_equal "Ruby", context.lookup("name")
+  end
 end

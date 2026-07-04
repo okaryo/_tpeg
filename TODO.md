@@ -99,7 +99,7 @@ Questions to answer:
 - [ ] Support nested lookup such as `user.name` if it remains useful.
 - [x] Decide behavior for hashes, objects, and method calls.
 - [ ] Add a scoped context model for future loops and partials.
-- [ ] Avoid accidental mutation of user-provided context data.
+- [x] Avoid accidental mutation of user-provided context data.
 
 Questions to answer:
 
@@ -236,3 +236,5 @@ changes.
   lookup during rendering.
 - Decided that rendering context must be hash-like (`key?` and `[]`), and that
   arbitrary object method calls are not supported yet.
+- Render context now shallow-copies and freezes top-level context values on
+  initialization.
