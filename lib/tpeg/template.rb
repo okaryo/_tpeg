@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "errors"
+require_relative "html_escape"
 require_relative "lexer"
 require_relative "parser"
 require_relative "render_context"
@@ -36,7 +37,7 @@ module Tpeg
     end
 
     def render_interpolation(name, render_context)
-      render_context.lookup(name).to_s
+      HtmlEscape.escape(render_context.lookup(name))
     end
   end
 end

@@ -27,6 +27,14 @@ class TpegTest < Minitest::Test
     assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ user.name }}!", user: { name: "Ruby" })
   end
 
+  def test_escapes_interpolated_html
+    assert_equal "&lt;strong&gt;Ruby&lt;/strong&gt;", Tpeg.render("{{ name }}", name: "<strong>Ruby</strong>")
+  end
+
+  def test_does_not_escape_plain_text
+    assert_equal "<p>Ruby</p>", Tpeg.render("<p>Ruby</p>")
+  end
+
   def test_raises_for_missing_variable
     error = assert_raises(Tpeg::MissingVariable) do
       Tpeg.render("Hello, {{ name }}!")
