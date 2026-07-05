@@ -50,6 +50,5 @@ separate from runtime filter lookup.
 Built-in filters currently live in `Tpeg::Filters::BUILT_INS`. Per-render custom
 filters are merged with those built-ins for that render only.
 
-There is no helper registration API yet. That is a separate design step because
-helpers raise broader questions about arguments, return safety, and how much Ruby
-behavior should be exposed to templates.
+Helpers use a separate `helpers:` registry because they call named operations
+with arguments, while filters transform a single value already being rendered.

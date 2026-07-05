@@ -60,6 +60,30 @@ class TpegTest < Minitest::Test
     assert_equal "[Ruby]", Tpeg.render("{{ name | bracket }}", { name: "Ruby" }, filters: filters)
   end
 
+  def test_renders_with_custom_helper
+    helpers = {
+      join: ->(left, right) { "#{left}:#{right}" }
+    }
+
+    assert_equal "Ruby:Go", Tpeg.render("{{ join(left, right) }}", { left: "Ruby", right: "Go" }, helpers: helpers)
+  end
+
+  def test_applies_filter_to_helper_result_before_escaping
+    helpers = {
+      join: ->(left, right) { "#{left}:#{right}" }
+    }
+
+    assert_equal "RUBY:GO", Tpeg.render("{{ join(left, right) | upcase }}", { left: "Ruby", right: "Go" }, helpers: helpers)
+  end
+
+  def test_raises_for_unknown_helper
+    error = assert_raises(Tpeg::Error) do
+      Tpeg.render("{{ join(left, right) }}", { left: "Ruby", right: "Go" })
+    end
+
+    assert_equal "unknown helper: join", error.message
+  end
+
   def test_renders_if_block_when_condition_is_truthy
     assert_equal "Hello, Ruby!", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", { user: { name: "Ruby" } })
   end

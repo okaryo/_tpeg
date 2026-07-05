@@ -36,6 +36,31 @@ class ParserTest < Minitest::Test
     assert_variable_node nodes[1], name: "name", filters: ["upcase"], start_offset: 10, end_offset: 23, line: 1, column: 11
   end
 
+  def test_parses_helper_call
+    nodes = parse("Hello, {{ link_to(label, url) }}!")
+
+    assert_helper_node nodes[1],
+                       name: "link_to",
+                       arguments: ["label", "url"],
+                       start_offset: 10,
+                       end_offset: 29,
+                       line: 1,
+                       column: 11
+  end
+
+  def test_parses_helper_call_with_filter
+    nodes = parse("Hello, {{ join(first, second) | upcase }}!")
+
+    assert_helper_node nodes[1],
+                       name: "join",
+                       arguments: ["first", "second"],
+                       filters: ["upcase"],
+                       start_offset: 10,
+                       end_offset: 38,
+                       line: 1,
+                       column: 11
+  end
+
   def test_raises_for_unknown_tag
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello {% unknown user %}!")
@@ -100,6 +125,14 @@ class ParserTest < Minitest::Test
     assert_equal 'invalid filter name: ""', error.message
   end
 
+  def test_raises_for_invalid_helper_argument
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello, {{ link_to(label, ) }}!")
+    end
+
+    assert_equal 'invalid helper argument: ""', error.message
+  end
+
   def test_raises_for_unknown_token_type
     token = Tpeg::Token.new(type: :unknown, value: "x", start_offset: 0, end_offset: 1, line: 1, column: 1)
 
@@ -157,6 +190,14 @@ class ParserTest < Minitest::Test
   def assert_variable_node(node, name:, filters: [], start_offset:, end_offset:, line:, column:)
     assert_instance_of Tpeg::VariableNode, node
     assert_equal name, node.name
+    assert_equal filters, node.filters
+    assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
+  end
+
+  def assert_helper_node(node, name:, arguments:, filters: [], start_offset:, end_offset:, line:, column:)
+    assert_instance_of Tpeg::HelperNode, node
+    assert_equal name, node.name
+    assert_equal arguments, node.arguments
     assert_equal filters, node.filters
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end

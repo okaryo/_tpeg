@@ -2,6 +2,7 @@
 
 require_relative "errors"
 require_relative "filters"
+require_relative "helpers"
 require_relative "html_escape"
 require_relative "lexer"
 require_relative "parser"
@@ -9,9 +10,10 @@ require_relative "render_context"
 
 module Tpeg
   class Template
-    def initialize(source, filters: {})
+    def initialize(source, filters: {}, helpers: {})
       @source = String(source)
       @filters = Filters.registry(filters)
+      @helpers = Helpers.registry(helpers)
     end
 
     def render(context = {})
@@ -37,6 +39,8 @@ module Tpeg
         node.value
       when VariableNode
         render_interpolation(node.name, node.filters, render_context)
+      when HelperNode
+        render_helper(node, render_context)
       when IfNode
         render_if(node, render_context)
       when ForNode
@@ -48,6 +52,17 @@ module Tpeg
 
     def render_interpolation(name, filters, render_context)
       value = render_context.lookup(name)
+      render_value(value, filters)
+    end
+
+    def render_helper(node, render_context)
+      arguments = node.arguments.map { |argument| render_context.lookup(argument) }
+      value = Helpers.call(node.name, arguments, @helpers)
+
+      render_value(value, node.filters)
+    end
+
+    def render_value(value, filters)
       filters.each do |filter|
         value = apply_filter(filter, value)
       end

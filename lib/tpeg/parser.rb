@@ -5,12 +5,14 @@ require_relative "errors"
 module Tpeg
   TextNode = Struct.new(:value, :start_offset, :end_offset, :line, :column, keyword_init: true)
   VariableNode = Struct.new(:name, :filters, :start_offset, :end_offset, :line, :column, keyword_init: true)
+  HelperNode = Struct.new(:name, :arguments, :filters, :start_offset, :end_offset, :line, :column, keyword_init: true)
   IfNode = Struct.new(:condition, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
   ForNode = Struct.new(:local_name, :collection, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
   class Parser
     VARIABLE_PATH = /\A[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*\z/.freeze
     FILTER_NAME = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
+    HELPER_CALL = /\A([a-zA-Z_][a-zA-Z0-9_]*)\((.*)\)\z/.freeze
     FOR_TAG = /\Afor\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+in\s+(.+)\z/.freeze
 
     def initialize(tokens)
@@ -55,8 +57,8 @@ module Tpeg
       when :text
         TextNode.new(**source_fields(token), value: token.value)
       when :interpolation
-        name, filters = parse_variable_expression(token.value)
-        VariableNode.new(**source_fields(token), name: name, filters: filters)
+        expression, filters = parse_filtered_expression(token.value)
+        node_for_interpolation_expression(expression, filters, token)
       when :tag
         node_for_tag(token)
       else
@@ -109,18 +111,43 @@ module Tpeg
       raise SyntaxError, "invalid variable name: #{name.inspect}"
     end
 
-    def parse_variable_expression(value)
+    def parse_filtered_expression(value)
       parts = value.split("|", -1).map(&:strip)
-      name = parts.shift || ""
+      expression = parts.shift || ""
       filters = parts
 
-      validate_variable_name(name)
+      raise SyntaxError, "empty interpolation" if expression.empty?
 
       filters.each do |filter|
         raise SyntaxError, "invalid filter name: #{filter.inspect}" unless FILTER_NAME.match?(filter)
       end
 
-      [name, filters]
+      [expression, filters]
+    end
+
+    def node_for_interpolation_expression(expression, filters, token)
+      helper_match = HELPER_CALL.match(expression)
+      return node_for_helper_expression(helper_match, filters, token) if helper_match
+
+      validate_variable_name(expression)
+      VariableNode.new(**source_fields(token), name: expression, filters: filters)
+    end
+
+    def node_for_helper_expression(match, filters, token)
+      HelperNode.new(
+        **source_fields(token),
+        name: match[1],
+        arguments: parse_helper_arguments(match[2]),
+        filters: filters
+      )
+    end
+
+    def parse_helper_arguments(source)
+      return [] if source.strip.empty?
+
+      source.split(",", -1).map(&:strip).each do |argument|
+        raise SyntaxError, "invalid helper argument: #{argument.inspect}" unless VARIABLE_PATH.match?(argument)
+      end
     end
 
     def source_fields(token)

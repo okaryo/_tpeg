@@ -2,6 +2,7 @@
 
 require_relative "tpeg/errors"
 require_relative "tpeg/filters"
+require_relative "tpeg/helpers"
 require_relative "tpeg/html_escape"
 require_relative "tpeg/lexer"
 require_relative "tpeg/parser"
@@ -9,8 +10,8 @@ require_relative "tpeg/render_context"
 require_relative "tpeg/template"
 
 module Tpeg
-  def self.render(source, context = {}, filters: {})
-    Template.new(source, filters: filters).render(context)
+  def self.render(source, context = {}, filters: {}, helpers: {})
+    Template.new(source, filters: filters, helpers: helpers).render(context)
   end
 
   def self.raw(value)

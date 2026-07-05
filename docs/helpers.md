@@ -10,16 +10,17 @@ They are more general than filters:
 
 ## Registration Direction
 
-Helpers should be registered per render call, similar to custom filters.
+Helpers are registered per render call, similar to custom filters.
 
-Planned shape:
+Current shape:
 
 ```ruby
 helpers = {
-  link_to: ->(label, href) { %(<a href="#{href}">#{label}</a>) }
+  join: ->(left, right) { "#{left}:#{right}" }
 }
 
-Tpeg.render(source, context, helpers: helpers)
+Tpeg.render("{{ join(first, second) }}", { first: "Ruby", second: "Go" }, helpers: helpers)
+# => "Ruby:Go"
 ```
 
 This keeps helper availability local to one render operation. It also avoids a
@@ -31,7 +32,7 @@ Helpers should be explicit. The template language should not fall back to Ruby's
 normal method lookup and should not allow arbitrary method calls such as
 `File.read`, `system`, or `exec`.
 
-That means helper support should be implemented as:
+Helper support is implemented as:
 
 ```text
 parse helper expression -> look up registered helper -> call it
@@ -46,16 +47,26 @@ evaluate arbitrary Ruby code
 This is the key difference from ERB-style rendering, where templates are Ruby
 code evaluated in a view context.
 
-## Open Syntax Decision
+## Current Syntax
 
-The exact helper call syntax is still undecided. The next implementation step
-should choose a small syntax that is easy to parse and explain before adding
-general argument handling.
+The first helper syntax is function-like interpolation:
 
-Possible directions:
+```text
+{{ helper_name(argument.path, other.path) }}
+```
 
-- function-like syntax: `{{ link_to(name, url) }}`
-- tag-like syntax: `{% helper link_to name url %}`
+Arguments are variable paths resolved through `RenderContext`. Literal strings,
+keyword arguments, nested helper calls, blocks, and arbitrary Ruby expressions
+are not supported.
 
-The first version should support only variable-path arguments. Literal strings,
-keyword arguments, blocks, and HTML-safety rules can be explored later.
+The helper result follows the same output path as variable interpolation:
+
+```text
+helper result -> filters -> escaping -> output
+```
+
+So this is valid:
+
+```text
+{{ join(first, second) | upcase }}
+```

@@ -147,6 +147,7 @@ Questions to answer:
 - [x] Add one simple built-in filter.
 - [x] Add per-render custom filter registration.
 - [x] Decide how helpers are registered.
+- [x] Add a minimal helper call syntax.
 - [ ] Add a template loader abstraction.
 - [ ] Implement partial rendering.
 - [ ] Explore layout rendering if it remains useful.
@@ -275,6 +276,8 @@ changes.
   longer owns the filter registry directly.
 - Added `filters:` to `Tpeg.render` for per-render custom filter callables.
 - Simplified `Tpeg.render` back to `Tpeg.render(source, context = {}, filters:
-  {})` so context data is passed explicitly as a hash.
+  {}, helpers: {})` so context data is passed explicitly as a hash.
 - Decided that helpers should be registered per render call and called
   explicitly, without falling back to arbitrary Ruby method lookup.
+- Added minimal helper interpolation syntax with variable-path arguments:
+  `{{ helper_name(arg.path) }}`.
