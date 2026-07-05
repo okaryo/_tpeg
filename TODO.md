@@ -114,7 +114,7 @@ Questions to answer:
 - [x] Decide the default escaping behavior.
 - [x] Add explicit raw output syntax or API if useful.
 - [x] Avoid double escaping where practical.
-- [ ] Compare selected behavior with ERB or Rails escaping.
+- [x] Compare selected behavior with ERB or Rails escaping.
 
 Questions to answer:
 
@@ -248,3 +248,5 @@ changes.
   escaping.
 - Decided that double escaping is avoided only for explicit `Tpeg.raw` values;
   ordinary strings are always escaped.
+- Compared current HTML escaping with Ruby's `ERB::Util.html_escape` for basic
+  HTML-sensitive characters and already-escaped plain strings.

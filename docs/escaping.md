@@ -34,6 +34,17 @@ does not try to guess whether an ordinary string is already safe HTML.
 
 Escaping uses Ruby's standard `CGI.escapeHTML`.
 
+Compared with Ruby's standard `ERB::Util.html_escape`, the current escaping
+output matches for the basic HTML-sensitive characters checked so far:
+
+```text
+< > & " '
+```
+
+Both `ERB::Util.html_escape` and `Tpeg::HtmlEscape.escape` also escape a plain
+string that already contains entities such as `&lt;`. In `_tpeg`, avoiding that
+double escaping requires the explicit `Tpeg.raw` API.
+
 The current implementation does not support:
 
 - Raw output syntax.
