@@ -127,11 +127,11 @@ Questions to answer:
 
 - [x] Tokenize control tags such as `{% if user %}`.
 - [x] Parse control tag tokens into tag nodes.
-- [ ] Parse conditional blocks.
-- [ ] Render conditional blocks.
+- [x] Parse conditional blocks.
+- [x] Render conditional blocks.
 - [ ] Add loop blocks.
 - [ ] Validate nested block structure.
-- [ ] Decide truthiness and empty collection behavior.
+- [x] Decide truthiness and empty collection behavior.
 - [ ] Add tests for nested and malformed blocks.
 
 Questions to answer:
@@ -258,3 +258,5 @@ changes.
 - Added `TagNode` as the parser representation for raw control tags.
 - Added parser support for `{% if condition %}...{% end %}` as nested `IfNode`
   structures. Rendering conditional blocks is still pending.
+- Added rendering for `IfNode`; conditions use Ruby-like truthiness where only
+  `nil` and `false` are falsey.

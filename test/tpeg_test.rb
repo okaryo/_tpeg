@@ -39,6 +39,24 @@ class TpegTest < Minitest::Test
     assert_equal "<strong>Ruby</strong>", Tpeg.render("{{ name }}", name: Tpeg.raw("<strong>Ruby</strong>"))
   end
 
+  def test_renders_if_block_when_condition_is_truthy
+    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: { name: "Ruby" })
+  end
+
+  def test_skips_if_block_when_condition_is_false
+    assert_equal "Hello, !", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: false)
+  end
+
+  def test_skips_if_block_when_condition_is_nil
+    assert_equal "Hello, !", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: nil)
+  end
+
+  def test_renders_nested_if_blocks
+    template = "{% if user %}{% if user.active %}active{% end %}{% end %}"
+
+    assert_equal "active", Tpeg.render(template, user: { active: true })
+  end
+
   def test_raises_for_missing_variable
     error = assert_raises(Tpeg::MissingVariable) do
       Tpeg.render("Hello, {{ name }}!")

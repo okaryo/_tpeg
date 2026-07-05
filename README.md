@@ -115,3 +115,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/parser.md`: notes on the first token-to-node parser boundary.
 - `docs/render-context.md`: notes on variable lookup during rendering.
 - `docs/escaping.md`: notes on HTML escaping for interpolated values.
+- `docs/control-flow.md`: notes on conditional block rendering.

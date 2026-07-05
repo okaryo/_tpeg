@@ -14,16 +14,20 @@ module Tpeg
 
     def render(context = {})
       render_context = RenderContext.new(context)
+      render_nodes(Parser.new(Lexer.new(@source).tokens).nodes, render_context)
+    end
+
+    private
+
+    def render_nodes(nodes, render_context)
       output = +""
 
-      Parser.new(Lexer.new(@source).tokens).nodes.each do |node|
+      nodes.each do |node|
         output << render_node(node, render_context)
       end
 
       output
     end
-
-    private
 
     def render_node(node, render_context)
       case node
@@ -31,6 +35,8 @@ module Tpeg
         node.value
       when VariableNode
         render_interpolation(node.name, render_context)
+      when IfNode
+        render_if(node, render_context)
       else
         raise Error, "unknown node type: #{node.class}"
       end
@@ -38,6 +44,16 @@ module Tpeg
 
     def render_interpolation(name, render_context)
       HtmlEscape.escape(render_context.lookup(name))
+    end
+
+    def render_if(node, render_context)
+      return "" unless truthy?(render_context.lookup(node.condition))
+
+      render_nodes(node.children, render_context)
+    end
+
+    def truthy?(value)
+      !value.nil? && value != false
     end
   end
 end

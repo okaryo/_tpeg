@@ -42,4 +42,4 @@ context lookup.
 
 Useful next steps are:
 
-- Render `IfNode` values using `RenderContext` truthiness.
+- Parse loop tags into block nodes.
