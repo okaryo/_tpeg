@@ -5,7 +5,6 @@ require_relative "errors"
 module Tpeg
   TextNode = Struct.new(:value, :start_offset, :end_offset, :line, :column, keyword_init: true)
   VariableNode = Struct.new(:name, :start_offset, :end_offset, :line, :column, keyword_init: true)
-  TagNode = Struct.new(:value, :start_offset, :end_offset, :line, :column, keyword_init: true)
   IfNode = Struct.new(:condition, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
   ForNode = Struct.new(:local_name, :collection, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
@@ -68,7 +67,7 @@ module Tpeg
       return parse_if_node(token) if token.value.start_with?("if ")
       return parse_for_node(token) if token.value.start_with?("for ")
 
-      TagNode.new(**source_fields(token), value: token.value)
+      raise SyntaxError, "unknown tag: #{token.value.inspect}"
     end
 
     def parse_if_node(token)

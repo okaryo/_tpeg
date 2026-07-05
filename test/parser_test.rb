@@ -30,12 +30,12 @@ class ParserTest < Minitest::Test
     assert_variable_node nodes[1], name: "user.name", start_offset: 10, end_offset: 19, line: 1, column: 11
   end
 
-  def test_parses_tag_tokens_into_tag_nodes
-    nodes = parse("Hello {% unknown user %}!")
+  def test_raises_for_unknown_tag
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello {% unknown user %}!")
+    end
 
-    assert_text_node nodes[0], value: "Hello ", start_offset: 0, end_offset: 6, line: 1, column: 1
-    assert_tag_node nodes[1], value: "unknown user", start_offset: 9, end_offset: 21, line: 1, column: 10
-    assert_text_node nodes[2], value: "!", start_offset: 24, end_offset: 25, line: 1, column: 25
+    assert_equal 'unknown tag: "unknown user"', error.message
   end
 
   def test_parses_if_block_into_if_node
@@ -143,12 +143,6 @@ class ParserTest < Minitest::Test
   def assert_variable_node(node, name:, start_offset:, end_offset:, line:, column:)
     assert_instance_of Tpeg::VariableNode, node
     assert_equal name, node.name
-    assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
-  end
-
-  def assert_tag_node(node, value:, start_offset:, end_offset:, line:, column:)
-    assert_instance_of Tpeg::TagNode, node
-    assert_equal value, node.value
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 

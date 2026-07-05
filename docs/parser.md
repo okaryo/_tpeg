@@ -6,16 +6,15 @@ Current node types:
 
 - `TextNode`: plain text to copy into output later.
 - `VariableNode`: a variable lookup requested by an interpolation marker.
-- `TagNode`: raw control tag content requested by a `{% ... %}` marker.
 - `IfNode`: a conditional block with a variable-path condition and child nodes.
 - `ForNode`: a loop block with a local variable name, collection path, and
   child nodes.
 
-For now, the parser only maps token types to node types:
+For simple tokens, the parser maps token types to node types:
 
 - `:text` token -> `TextNode`
 - `:interpolation` token -> `VariableNode`
-- `:tag` token -> `TagNode`
+- supported `:tag` token -> `IfNode` or `ForNode`
 
 Source positions are copied from tokens to nodes. This keeps later diagnostics
 able to point at the parsed value rather than re-reading the source.
@@ -31,8 +30,9 @@ way.
 The parser validates variable names before creating `VariableNode` values.
 Empty interpolation markers and invalid names are parsing errors. Context lookup
 still happens in the renderer, so missing variables remain rendering errors.
-Unknown tag contents are kept as `TagNode` values for now. Invalid `for` tag
-syntax is a parsing error.
+Unknown tag contents are parsing errors because the parser is the component that
+decides which control-flow syntax this engine supports. Invalid `for` tag syntax
+is also a parsing error.
 
 The renderer consumes parser nodes, so the current flow is:
 
@@ -47,4 +47,4 @@ context lookup.
 
 Useful next steps are:
 
-- Render `ForNode` values using child render contexts.
+- Add another supported tag intentionally, such as `else`.

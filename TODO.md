@@ -126,7 +126,7 @@ Questions to answer:
 ### 6. Control Flow
 
 - [x] Tokenize control tags such as `{% if user %}`.
-- [x] Parse control tag tokens into tag nodes.
+- [x] Reject unsupported control tags during parsing.
 - [x] Parse conditional blocks.
 - [x] Render conditional blocks.
 - [x] Parse loop blocks.
@@ -256,7 +256,8 @@ changes.
   HTML-sensitive characters and already-escaped plain strings.
 - Added lexer support for `{% ... %}` control tag tokens as the first control
   flow boundary.
-- Added `TagNode` as the parser representation for raw control tags.
+- Decided that unsupported control tags are parser errors instead of raw AST
+  nodes.
 - Added parser support for `{% if condition %}...{% end %}` as nested `IfNode`
   structures. Rendering conditional blocks is still pending.
 - Added rendering for `IfNode`; conditions use Ruby-like truthiness where only
