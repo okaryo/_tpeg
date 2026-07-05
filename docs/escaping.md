@@ -5,7 +5,7 @@ Interpolated values are HTML-escaped by default.
 For example:
 
 ```ruby
-Tpeg.render("{{ name }}", name: "<strong>Ruby</strong>")
+Tpeg.render("{{ name }}", { name: "<strong>Ruby</strong>" })
 ```
 
 renders:
@@ -20,7 +20,7 @@ template source is preserved as-is.
 Use `Tpeg.raw(value)` to mark a value as already safe for HTML output:
 
 ```ruby
-Tpeg.render("{{ name }}", name: Tpeg.raw("<strong>Ruby</strong>"))
+Tpeg.render("{{ name }}", { name: Tpeg.raw("<strong>Ruby</strong>") })
 ```
 
 This renders the raw HTML string without escaping it. `Tpeg.raw` is an explicit

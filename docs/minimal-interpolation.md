@@ -11,7 +11,7 @@ Hello, {{ name }}!
 Rendering uses a hash-like context. Keys may be strings or symbols:
 
 ```ruby
-Tpeg.render("Hello, {{ name }}!", name: "Ruby")
+Tpeg.render("Hello, {{ name }}!", { name: "Ruby" })
 ```
 
 This returns:

@@ -89,7 +89,7 @@ The current implementation is a minimal interpolation renderer.
 Run a small example:
 
 ```sh
-ruby -Ilib -e 'require "tpeg"; puts Tpeg.render("Hello, {{ name }}!", name: "Ruby")'
+ruby -Ilib -e 'require "tpeg"; puts Tpeg.render("Hello, {{ name }}!", { name: "Ruby" })'
 ```
 
 Run the tests:

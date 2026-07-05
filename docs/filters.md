@@ -29,13 +29,27 @@ Only one built-in filter exists:
 
 - `upcase`: converts the value to a string and calls `upcase`.
 
+Custom filters can be passed per render call:
+
+```ruby
+filters = {
+  bracket: ->(value) { "[#{value}]" }
+}
+
+Tpeg.render("{{ name | bracket }}", { name: "Ruby" }, filters: filters)
+# => "[Ruby]"
+```
+
+Custom filter names are converted to strings, so symbol keys and string keys
+both work. A custom filter must respond to `call`.
+
 Unknown filter names are render errors, not parser errors. The parser only checks
 that a filter name has a valid identifier shape. This keeps syntax validation
 separate from runtime filter lookup.
 
-Built-in filters currently live in `Tpeg::Filters::BUILT_INS`. This is still a
-fixed registry, not a public registration API.
+Built-in filters currently live in `Tpeg::Filters::BUILT_INS`. Per-render custom
+filters are merged with those built-ins for that render only.
 
 There is no helper registration API yet. That is a separate design step because
-it raises questions about where helper functions live, how they are passed into a
-template, and how helper errors should be reported.
+helpers raise broader questions about arguments, return safety, and how much Ruby
+behavior should be exposed to templates.

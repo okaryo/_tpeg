@@ -8,27 +8,27 @@ class TpegTest < Minitest::Test
   end
 
   def test_interpolates_string_key
-    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ name }}!", "name" => "Ruby")
+    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ name }}!", { "name" => "Ruby" })
   end
 
   def test_interpolates_symbol_key
-    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ name }}!", name: "Ruby")
+    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ name }}!", { name: "Ruby" })
   end
 
   def test_interpolates_adjacent_markers
-    assert_equal "ab", Tpeg.render("{{ a }}{{ b }}", a: "a", b: "b")
+    assert_equal "ab", Tpeg.render("{{ a }}{{ b }}", { a: "a", b: "b" })
   end
 
   def test_converts_values_to_strings
-    assert_equal "count: 3", Tpeg.render("count: {{ count }}", count: 3)
+    assert_equal "count: 3", Tpeg.render("count: {{ count }}", { count: 3 })
   end
 
   def test_interpolates_nested_hash_value
-    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ user.name }}!", user: { name: "Ruby" })
+    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {{ user.name }}!", { user: { name: "Ruby" } })
   end
 
   def test_escapes_interpolated_html
-    assert_equal "&lt;strong&gt;Ruby&lt;/strong&gt;", Tpeg.render("{{ name }}", name: "<strong>Ruby</strong>")
+    assert_equal "&lt;strong&gt;Ruby&lt;/strong&gt;", Tpeg.render("{{ name }}", { name: "<strong>Ruby</strong>" })
   end
 
   def test_does_not_escape_plain_text
@@ -36,57 +36,65 @@ class TpegTest < Minitest::Test
   end
 
   def test_renders_raw_value_without_escaping
-    assert_equal "<strong>Ruby</strong>", Tpeg.render("{{ name }}", name: Tpeg.raw("<strong>Ruby</strong>"))
+    assert_equal "<strong>Ruby</strong>", Tpeg.render("{{ name }}", { name: Tpeg.raw("<strong>Ruby</strong>") })
   end
 
   def test_applies_upcase_filter_before_escaping
-    assert_equal "RUBY", Tpeg.render("{{ name | upcase }}", name: "Ruby")
-    assert_equal "&lt;B&gt;RUBY&lt;/B&gt;", Tpeg.render("{{ name | upcase }}", name: "<b>Ruby</b>")
+    assert_equal "RUBY", Tpeg.render("{{ name | upcase }}", { name: "Ruby" })
+    assert_equal "&lt;B&gt;RUBY&lt;/B&gt;", Tpeg.render("{{ name | upcase }}", { name: "<b>Ruby</b>" })
   end
 
   def test_raises_for_unknown_filter
     error = assert_raises(Tpeg::Error) do
-      Tpeg.render("{{ name | unknown }}", name: "Ruby")
+      Tpeg.render("{{ name | unknown }}", { name: "Ruby" })
     end
 
     assert_equal "unknown filter: unknown", error.message
   end
 
+  def test_renders_with_custom_filter
+    filters = {
+      bracket: ->(value) { "[#{value}]" }
+    }
+
+    assert_equal "[Ruby]", Tpeg.render("{{ name | bracket }}", { name: "Ruby" }, filters: filters)
+  end
+
   def test_renders_if_block_when_condition_is_truthy
-    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: { name: "Ruby" })
+    assert_equal "Hello, Ruby!", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", { user: { name: "Ruby" } })
   end
 
   def test_skips_if_block_when_condition_is_false
-    assert_equal "Hello, !", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: false)
+    assert_equal "Hello, !", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", { user: false })
   end
 
   def test_skips_if_block_when_condition_is_nil
-    assert_equal "Hello, !", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: nil)
+    assert_equal "Hello, !", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", { user: nil })
   end
 
   def test_renders_nested_if_blocks
     template = "{% if user %}{% if user.active %}active{% end %}{% end %}"
 
-    assert_equal "active", Tpeg.render(template, user: { active: true })
+    assert_equal "active", Tpeg.render(template, { user: { active: true } })
   end
 
   def test_renders_for_block_for_each_item
     template = "{% for item in items %}{{ item.name }} {% end %}"
 
-    assert_equal "Ruby Go ", Tpeg.render(template, items: [{ name: "Ruby" }, { name: "Go" }])
+    assert_equal "Ruby Go ", Tpeg.render(template, { items: [{ name: "Ruby" }, { name: "Go" }] })
   end
 
   def test_for_block_local_value_shadows_parent_value
     template = "{{ item.name }}:{% for item in items %}{{ item.name }}{% end %}:{{ item.name }}"
 
-    assert_equal "Parent:Child:Parent", Tpeg.render(template, item: { name: "Parent" }, items: [{ name: "Child" }])
+    assert_equal "Parent:Child:Parent", Tpeg.render(template, { item: { name: "Parent" }, items: [{ name: "Child" }] })
   end
 
   def test_renders_if_inside_for_block
     template = "{% for item in items %}{% if item.active %}{{ item.name }} {% end %}{% end %}"
     items = [{ name: "Ruby", active: true }, { name: "Go", active: false }]
 
-    assert_equal "Ruby ", Tpeg.render(template, items: items)
+    assert_equal "Ruby ", Tpeg.render(template, { items: items })
   end
 
   def test_renders_nested_for_blocks_with_parent_and_local_values
@@ -101,7 +109,7 @@ class TpegTest < Minitest::Test
 
   def test_raises_when_for_collection_is_not_iterable
     error = assert_raises(Tpeg::Error) do
-      Tpeg.render("{% for item in items %}{{ item }}{% end %}", items: 1)
+      Tpeg.render("{% for item in items %}{{ item }}{% end %}", { items: 1 })
     end
 
     assert_equal "for collection must respond to each: items", error.message
@@ -141,7 +149,7 @@ class TpegTest < Minitest::Test
 
   def test_raises_for_invalid_variable_name
     error = assert_raises(Tpeg::SyntaxError) do
-      Tpeg.render("Hello, {{ user..name }}!", user: { name: "Ruby" })
+      Tpeg.render("Hello, {{ user..name }}!", { user: { name: "Ruby" } })
     end
 
     assert_equal 'invalid variable name: "user..name"', error.message

@@ -145,6 +145,7 @@ Questions to answer:
 ### 7. Helpers, Filters, And Partials
 
 - [x] Add one simple built-in filter.
+- [x] Add per-render custom filter registration.
 - [ ] Decide how helpers are registered.
 - [ ] Add a template loader abstraction.
 - [ ] Implement partial rendering.
@@ -272,3 +273,6 @@ changes.
   `{{ name | upcase }}`.
 - Extracted built-in filter lookup into `Tpeg::Filters` so the renderer no
   longer owns the filter registry directly.
+- Added `filters:` to `Tpeg.render` for per-render custom filter callables.
+- Simplified `Tpeg.render` back to `Tpeg.render(source, context = {}, filters:
+  {})` so context data is passed explicitly as a hash.

@@ -9,8 +9,8 @@ require_relative "tpeg/render_context"
 require_relative "tpeg/template"
 
 module Tpeg
-  def self.render(source, context = {})
-    Template.new(source).render(context)
+  def self.render(source, context = {}, filters: {})
+    Template.new(source, filters: filters).render(context)
   end
 
   def self.raw(value)

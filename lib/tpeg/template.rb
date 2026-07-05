@@ -9,8 +9,9 @@ require_relative "render_context"
 
 module Tpeg
   class Template
-    def initialize(source)
+    def initialize(source, filters: {})
       @source = String(source)
+      @filters = Filters.registry(filters)
     end
 
     def render(context = {})
@@ -55,7 +56,7 @@ module Tpeg
     end
 
     def apply_filter(filter, value)
-      Filters.apply(filter, value)
+      Filters.apply(filter, value, @filters)
     end
 
     def render_if(node, render_context)
