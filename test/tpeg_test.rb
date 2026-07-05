@@ -57,6 +57,33 @@ class TpegTest < Minitest::Test
     assert_equal "active", Tpeg.render(template, user: { active: true })
   end
 
+  def test_renders_for_block_for_each_item
+    template = "{% for item in items %}{{ item.name }} {% end %}"
+
+    assert_equal "Ruby Go ", Tpeg.render(template, items: [{ name: "Ruby" }, { name: "Go" }])
+  end
+
+  def test_for_block_local_value_shadows_parent_value
+    template = "{{ item.name }}:{% for item in items %}{{ item.name }}{% end %}:{{ item.name }}"
+
+    assert_equal "Parent:Child:Parent", Tpeg.render(template, item: { name: "Parent" }, items: [{ name: "Child" }])
+  end
+
+  def test_renders_if_inside_for_block
+    template = "{% for item in items %}{% if item.active %}{{ item.name }} {% end %}{% end %}"
+    items = [{ name: "Ruby", active: true }, { name: "Go", active: false }]
+
+    assert_equal "Ruby ", Tpeg.render(template, items: items)
+  end
+
+  def test_raises_when_for_collection_is_not_iterable
+    error = assert_raises(Tpeg::Error) do
+      Tpeg.render("{% for item in items %}{{ item }}{% end %}", items: 1)
+    end
+
+    assert_equal "for collection must respond to each: items", error.message
+  end
+
   def test_raises_for_missing_variable
     error = assert_raises(Tpeg::MissingVariable) do
       Tpeg.render("Hello, {{ name }}!")

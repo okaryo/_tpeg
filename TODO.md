@@ -129,8 +129,8 @@ Questions to answer:
 - [x] Parse control tag tokens into tag nodes.
 - [x] Parse conditional blocks.
 - [x] Render conditional blocks.
-- [ ] Parse loop blocks.
-- [ ] Render loop blocks.
+- [x] Parse loop blocks.
+- [x] Render loop blocks.
 - [ ] Validate nested block structure.
 - [x] Decide truthiness and empty collection behavior.
 - [ ] Add tests for nested and malformed blocks.
@@ -263,3 +263,5 @@ changes.
   `nil` and `false` are falsey.
 - Added parser support for `{% for item in items %}...{% end %}` as nested
   `ForNode` structures. Rendering loop blocks is still pending.
+- Added rendering for `ForNode` using `RenderContext#with_locals` so loop local
+  variables can shadow parent values.

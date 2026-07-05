@@ -22,7 +22,8 @@ The parser also recognizes loop blocks:
 ```
 
 This becomes a `ForNode` with a local variable name, a collection variable path,
-and child nodes. Rendering `ForNode` values is not implemented yet.
+and child nodes. Rendering uses a child `RenderContext` for each item, binding
+the local variable name to the current item.
 
 ## Truthiness
 
@@ -40,7 +41,7 @@ The condition is a variable path resolved through `RenderContext`, so
 ## Current Scope
 
 The current implementation supports nested `if` blocks.
-The parser supports nested `for` blocks, but rendering loops is still pending.
+The current implementation supports nested `if` and `for` blocks.
 
 It does not support:
 
@@ -48,3 +49,4 @@ It does not support:
 - Boolean expressions such as `and`, `or`, or `not`.
 - Comparisons.
 - Calling Ruby methods from conditions.
+- Iterating non-`each` collections.
