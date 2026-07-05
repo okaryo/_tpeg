@@ -5,6 +5,7 @@ require_relative "errors"
 module Tpeg
   TextNode = Struct.new(:value, :start_offset, :end_offset, :line, :column, keyword_init: true)
   VariableNode = Struct.new(:name, :start_offset, :end_offset, :line, :column, keyword_init: true)
+  TagNode = Struct.new(:value, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
   class Parser
     VARIABLE_PATH = /\A[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*\z/.freeze
@@ -26,6 +27,8 @@ module Tpeg
       when :interpolation
         validate_variable_name(token.value)
         VariableNode.new(**source_fields(token), name: token.value)
+      when :tag
+        TagNode.new(**source_fields(token), value: token.value)
       else
         raise SyntaxError, "unknown token type: #{token.type.inspect}"
       end

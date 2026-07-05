@@ -126,6 +126,7 @@ Questions to answer:
 ### 6. Control Flow
 
 - [x] Tokenize control tags such as `{% if user %}`.
+- [x] Parse control tag tokens into tag nodes.
 - [ ] Add conditional blocks.
 - [ ] Add loop blocks.
 - [ ] Validate nested block structure.
@@ -253,3 +254,4 @@ changes.
   HTML-sensitive characters and already-escaped plain strings.
 - Added lexer support for `{% ... %}` control tag tokens as the first control
   flow boundary.
+- Added `TagNode` as the parser representation for raw control tags.
