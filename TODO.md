@@ -270,3 +270,5 @@ changes.
   and parent-scope values.
 - Added a minimal `upcase` filter for interpolation expressions such as
   `{{ name | upcase }}`.
+- Extracted built-in filter lookup into `Tpeg::Filters` so the renderer no
+  longer owns the filter registry directly.

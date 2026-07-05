@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "errors"
+require_relative "filters"
 require_relative "html_escape"
 require_relative "lexer"
 require_relative "parser"
@@ -54,12 +55,7 @@ module Tpeg
     end
 
     def apply_filter(filter, value)
-      case filter
-      when "upcase"
-        value.to_s.upcase
-      else
-        raise Error, "unknown filter: #{filter}"
-      end
+      Filters.apply(filter, value)
     end
 
     def render_if(node, render_context)

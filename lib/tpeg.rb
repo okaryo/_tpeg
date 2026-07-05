@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "tpeg/errors"
+require_relative "tpeg/filters"
 require_relative "tpeg/html_escape"
 require_relative "tpeg/lexer"
 require_relative "tpeg/parser"
