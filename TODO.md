@@ -113,7 +113,7 @@ Questions to answer:
 - [x] Add HTML escaping for interpolated values.
 - [x] Decide the default escaping behavior.
 - [x] Add explicit raw output syntax or API if useful.
-- [ ] Avoid double escaping where practical.
+- [x] Avoid double escaping where practical.
 - [ ] Compare selected behavior with ERB or Rails escaping.
 
 Questions to answer:
@@ -246,3 +246,5 @@ changes.
   `CGI.escapeHTML`.
 - Added `Tpeg.raw(value)` as an explicit API for values that should bypass HTML
   escaping.
+- Decided that double escaping is avoided only for explicit `Tpeg.raw` values;
+  ordinary strings are always escaped.
