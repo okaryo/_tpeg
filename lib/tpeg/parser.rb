@@ -4,12 +4,13 @@ require_relative "errors"
 
 module Tpeg
   TextNode = Struct.new(:value, :start_offset, :end_offset, :line, :column, keyword_init: true)
-  VariableNode = Struct.new(:name, :start_offset, :end_offset, :line, :column, keyword_init: true)
+  VariableNode = Struct.new(:name, :filters, :start_offset, :end_offset, :line, :column, keyword_init: true)
   IfNode = Struct.new(:condition, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
   ForNode = Struct.new(:local_name, :collection, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
   class Parser
     VARIABLE_PATH = /\A[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*\z/.freeze
+    FILTER_NAME = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
     FOR_TAG = /\Afor\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+in\s+(.+)\z/.freeze
 
     def initialize(tokens)
@@ -54,8 +55,8 @@ module Tpeg
       when :text
         TextNode.new(**source_fields(token), value: token.value)
       when :interpolation
-        validate_variable_name(token.value)
-        VariableNode.new(**source_fields(token), name: token.value)
+        name, filters = parse_variable_expression(token.value)
+        VariableNode.new(**source_fields(token), name: name, filters: filters)
       when :tag
         node_for_tag(token)
       else
@@ -106,6 +107,20 @@ module Tpeg
       return if VARIABLE_PATH.match?(name)
 
       raise SyntaxError, "invalid variable name: #{name.inspect}"
+    end
+
+    def parse_variable_expression(value)
+      parts = value.split("|", -1).map(&:strip)
+      name = parts.shift || ""
+      filters = parts
+
+      validate_variable_name(name)
+
+      filters.each do |filter|
+        raise SyntaxError, "invalid filter name: #{filter.inspect}" unless FILTER_NAME.match?(filter)
+      end
+
+      [name, filters]
     end
 
     def source_fields(token)

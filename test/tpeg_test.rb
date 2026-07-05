@@ -39,6 +39,19 @@ class TpegTest < Minitest::Test
     assert_equal "<strong>Ruby</strong>", Tpeg.render("{{ name }}", name: Tpeg.raw("<strong>Ruby</strong>"))
   end
 
+  def test_applies_upcase_filter_before_escaping
+    assert_equal "RUBY", Tpeg.render("{{ name | upcase }}", name: "Ruby")
+    assert_equal "&lt;B&gt;RUBY&lt;/B&gt;", Tpeg.render("{{ name | upcase }}", name: "<b>Ruby</b>")
+  end
+
+  def test_raises_for_unknown_filter
+    error = assert_raises(Tpeg::Error) do
+      Tpeg.render("{{ name | unknown }}", name: "Ruby")
+    end
+
+    assert_equal "unknown filter: unknown", error.message
+  end
+
   def test_renders_if_block_when_condition_is_truthy
     assert_equal "Hello, Ruby!", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", user: { name: "Ruby" })
   end

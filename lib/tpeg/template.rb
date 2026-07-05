@@ -34,7 +34,7 @@ module Tpeg
       when TextNode
         node.value
       when VariableNode
-        render_interpolation(node.name, render_context)
+        render_interpolation(node.name, node.filters, render_context)
       when IfNode
         render_if(node, render_context)
       when ForNode
@@ -44,8 +44,22 @@ module Tpeg
       end
     end
 
-    def render_interpolation(name, render_context)
-      HtmlEscape.escape(render_context.lookup(name))
+    def render_interpolation(name, filters, render_context)
+      value = render_context.lookup(name)
+      filters.each do |filter|
+        value = apply_filter(filter, value)
+      end
+
+      HtmlEscape.escape(value)
+    end
+
+    def apply_filter(filter, value)
+      case filter
+      when "upcase"
+        value.to_s.upcase
+      else
+        raise Error, "unknown filter: #{filter}"
+      end
     end
 
     def render_if(node, render_context)

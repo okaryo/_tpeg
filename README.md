@@ -116,3 +116,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/render-context.md`: notes on variable lookup during rendering.
 - `docs/escaping.md`: notes on HTML escaping for interpolated values.
 - `docs/control-flow.md`: notes on conditional block rendering.
+- `docs/filters.md`: notes on interpolation filters and render order.

@@ -30,6 +30,12 @@ class ParserTest < Minitest::Test
     assert_variable_node nodes[1], name: "user.name", start_offset: 10, end_offset: 19, line: 1, column: 11
   end
 
+  def test_parses_variable_filters
+    nodes = parse("Hello, {{ name | upcase }}!")
+
+    assert_variable_node nodes[1], name: "name", filters: ["upcase"], start_offset: 10, end_offset: 23, line: 1, column: 11
+  end
+
   def test_raises_for_unknown_tag
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello {% unknown user %}!")
@@ -86,6 +92,14 @@ class ParserTest < Minitest::Test
     assert_equal 'invalid variable name: "user..name"', error.message
   end
 
+  def test_raises_for_invalid_filter_name
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello, {{ name | }}!")
+    end
+
+    assert_equal 'invalid filter name: ""', error.message
+  end
+
   def test_raises_for_unknown_token_type
     token = Tpeg::Token.new(type: :unknown, value: "x", start_offset: 0, end_offset: 1, line: 1, column: 1)
 
@@ -140,9 +154,10 @@ class ParserTest < Minitest::Test
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 
-  def assert_variable_node(node, name:, start_offset:, end_offset:, line:, column:)
+  def assert_variable_node(node, name:, filters: [], start_offset:, end_offset:, line:, column:)
     assert_instance_of Tpeg::VariableNode, node
     assert_equal name, node.name
+    assert_equal filters, node.filters
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 

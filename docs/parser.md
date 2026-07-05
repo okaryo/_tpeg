@@ -5,7 +5,8 @@ The parser is the first boundary above lexer tokens.
 Current node types:
 
 - `TextNode`: plain text to copy into output later.
-- `VariableNode`: a variable lookup requested by an interpolation marker.
+- `VariableNode`: a variable lookup requested by an interpolation marker,
+  plus any filters applied to the looked-up value.
 - `IfNode`: a conditional block with a variable-path condition and child nodes.
 - `ForNode`: a loop block with a local variable name, collection path, and
   child nodes.
@@ -13,7 +14,7 @@ Current node types:
 For simple tokens, the parser maps token types to node types:
 
 - `:text` token -> `TextNode`
-- `:interpolation` token -> `VariableNode`
+- `:interpolation` token -> `VariableNode` with a variable path and filters
 - supported `:tag` token -> `IfNode` or `ForNode`
 
 Source positions are copied from tokens to nodes. This keeps later diagnostics
@@ -27,9 +28,10 @@ way.
 
 ## Current Scope
 
-The parser validates variable names before creating `VariableNode` values.
-Empty interpolation markers and invalid names are parsing errors. Context lookup
-still happens in the renderer, so missing variables remain rendering errors.
+The parser validates variable expressions before creating `VariableNode` values.
+Empty interpolation markers, invalid variable names, and invalid filter names
+are parsing errors. Context lookup still happens in the renderer, so missing
+variables remain rendering errors.
 Unknown tag contents are parsing errors because the parser is the component that
 decides which control-flow syntax this engine supports. Invalid `for` tag syntax
 is also a parsing error.

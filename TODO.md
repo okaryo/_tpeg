@@ -144,7 +144,7 @@ Questions to answer:
 
 ### 7. Helpers, Filters, And Partials
 
-- [ ] Add simple filters or helper functions.
+- [x] Add one simple built-in filter.
 - [ ] Decide how helpers are registered.
 - [ ] Add a template loader abstraction.
 - [ ] Implement partial rendering.
@@ -268,3 +268,5 @@ changes.
   variables can shadow parent values.
 - Added explicit render coverage for nested `for` blocks that read both local
   and parent-scope values.
+- Added a minimal `upcase` filter for interpolation expressions such as
+  `{{ name | upcase }}`.
