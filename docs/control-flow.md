@@ -40,8 +40,8 @@ The condition is a variable path resolved through `RenderContext`, so
 
 ## Current Scope
 
-The current implementation supports nested `if` blocks.
-The current implementation supports nested `if` and `for` blocks.
+The current implementation supports nested `if` and `for` blocks. Inner blocks
+can read variables from their own local scope and from parent scopes.
 
 It does not support:
 

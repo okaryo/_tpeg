@@ -76,6 +76,16 @@ class TpegTest < Minitest::Test
     assert_equal "Ruby ", Tpeg.render(template, items: items)
   end
 
+  def test_renders_nested_for_blocks_with_parent_and_local_values
+    template = "{% for item in items %}{% for book in books %}{{ item.name }}:{{ book.title }};{% end %}{% end %}"
+    context = {
+      items: [{ name: "Ruby" }, { name: "Go" }],
+      books: [{ title: "Book A" }, { title: "Book B" }]
+    }
+
+    assert_equal "Ruby:Book A;Ruby:Book B;Go:Book A;Go:Book B;", Tpeg.render(template, context)
+  end
+
   def test_raises_when_for_collection_is_not_iterable
     error = assert_raises(Tpeg::Error) do
       Tpeg.render("{% for item in items %}{{ item }}{% end %}", items: 1)

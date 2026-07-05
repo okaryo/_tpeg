@@ -131,9 +131,9 @@ Questions to answer:
 - [x] Render conditional blocks.
 - [x] Parse loop blocks.
 - [x] Render loop blocks.
-- [ ] Validate nested block structure.
+- [x] Validate nested block structure.
 - [x] Decide truthiness and empty collection behavior.
-- [ ] Add tests for nested and malformed blocks.
+- [x] Add tests for nested and malformed blocks.
 
 Questions to answer:
 
@@ -265,3 +265,5 @@ changes.
   `ForNode` structures. Rendering loop blocks is still pending.
 - Added rendering for `ForNode` using `RenderContext#with_locals` so loop local
   variables can shadow parent values.
+- Added explicit render coverage for nested `for` blocks that read both local
+  and parent-scope values.
