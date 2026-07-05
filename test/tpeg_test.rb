@@ -60,6 +60,14 @@ class TpegTest < Minitest::Test
     assert_equal "[Ruby]", Tpeg.render("{{ name | bracket }}", { name: "Ruby" }, filters: filters)
   end
 
+  def test_applies_multiple_filters_from_left_to_right
+    filters = {
+      bracket: ->(value) { "[#{value}]" }
+    }
+
+    assert_equal "[RUBY]", Tpeg.render("{{ name | upcase | bracket }}", { name: "Ruby" }, filters: filters)
+  end
+
   def test_renders_with_custom_helper
     helpers = {
       join: ->(left, right) { "#{left}:#{right}" }

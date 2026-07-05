@@ -6,6 +6,7 @@ Current syntax:
 
 ```text
 {{ name | upcase }}
+{{ name | upcase | bracket }}
 ```
 
 The parser splits the interpolation expression into:
@@ -14,10 +15,11 @@ The parser splits the interpolation expression into:
 - a list of filters: `["upcase"]`
 
 The renderer resolves the variable path through `RenderContext`, applies each
-filter through `Tpeg::Filters`, then HTML-escapes the final value.
+filter through `Tpeg::Filters` from left to right, then HTML-escapes the final
+value.
 
 ```text
-lookup -> filters -> escaping -> output
+lookup -> filter -> filter -> escaping -> output
 ```
 
 This order means filters operate on the original Ruby value, and escaping remains
@@ -38,6 +40,9 @@ filters = {
 
 Tpeg.render("{{ name | bracket }}", { name: "Ruby" }, filters: filters)
 # => "[Ruby]"
+
+Tpeg.render("{{ name | upcase | bracket }}", { name: "Ruby" }, filters: filters)
+# => "[RUBY]"
 ```
 
 Custom filter names are converted to strings, so symbol keys and string keys

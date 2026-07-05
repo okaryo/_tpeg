@@ -281,3 +281,5 @@ changes.
   explicitly, without falling back to arbitrary Ruby method lookup.
 - Added minimal helper interpolation syntax with variable-path arguments:
   `{{ helper_name(arg.path) }}`.
+- Documented and tested that multiple filters in one interpolation are applied
+  from left to right.
