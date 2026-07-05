@@ -24,6 +24,14 @@ class LexerTest < Minitest::Test
     assert_token tokens[1], type: :interpolation, value: "b", start_offset: 10, end_offset: 11, line: 1, column: 11
   end
 
+  def test_tokenizes_control_tag
+    tokens = Tpeg::Lexer.new("Hello {% if user %}!").tokens
+
+    assert_token tokens[0], type: :text, value: "Hello ", start_offset: 0, end_offset: 6, line: 1, column: 1
+    assert_token tokens[1], type: :tag, value: "if user", start_offset: 9, end_offset: 16, line: 1, column: 10
+    assert_token tokens[2], type: :text, value: "!", start_offset: 19, end_offset: 20, line: 1, column: 20
+  end
+
   def test_preserves_text_between_delimiters
     tokens = Tpeg::Lexer.new("a\n  {{ name }}\n b").tokens
 
@@ -44,6 +52,12 @@ class LexerTest < Minitest::Test
     assert_token tokens[0], type: :interpolation, value: "name", start_offset: 5, end_offset: 9, line: 2, column: 3
   end
 
+  def test_trims_multiline_control_tag_whitespace
+    tokens = Tpeg::Lexer.new("{%\n  if user\n%}").tokens
+
+    assert_token tokens[0], type: :tag, value: "if user", start_offset: 5, end_offset: 12, line: 2, column: 3
+  end
+
   def test_whitespace_only_interpolation_becomes_empty_token
     tokens = Tpeg::Lexer.new("{{   }}").tokens
 
@@ -61,6 +75,22 @@ class LexerTest < Minitest::Test
   def test_raises_for_unexpected_closing_delimiter
     error = assert_raises(Tpeg::SyntaxError) do
       Tpeg::Lexer.new("Hello }}").tokens
+    end
+
+    assert_equal "unexpected closing delimiter", error.message
+  end
+
+  def test_raises_for_unterminated_control_tag
+    error = assert_raises(Tpeg::SyntaxError) do
+      Tpeg::Lexer.new("Hello {% if user").tokens
+    end
+
+    assert_equal "unterminated tag", error.message
+  end
+
+  def test_raises_for_unexpected_control_tag_closing_delimiter
+    error = assert_raises(Tpeg::SyntaxError) do
+      Tpeg::Lexer.new("Hello %}").tokens
     end
 
     assert_equal "unexpected closing delimiter", error.message

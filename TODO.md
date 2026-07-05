@@ -125,6 +125,7 @@ Questions to answer:
 
 ### 6. Control Flow
 
+- [x] Tokenize control tags such as `{% if user %}`.
 - [ ] Add conditional blocks.
 - [ ] Add loop blocks.
 - [ ] Validate nested block structure.
@@ -250,3 +251,5 @@ changes.
   ordinary strings are always escaped.
 - Compared current HTML escaping with Ruby's `ERB::Util.html_escape` for basic
   HTML-sensitive characters and already-escaped plain strings.
+- Added lexer support for `{% ... %}` control tag tokens as the first control
+  flow boundary.

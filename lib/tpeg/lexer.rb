@@ -15,10 +15,10 @@ module Tpeg
       cursor = 0
 
       while cursor < @source.length
-        opening = @source.index("{{", cursor)
-        closing = @source.index("}}", cursor)
+        opening = next_opening(cursor)
+        closing = next_closing(cursor)
 
-        if closing && (opening.nil? || closing < opening)
+        if closing && (opening.nil? || closing[:index] < opening[:index])
           raise SyntaxError, "unexpected closing delimiter"
         end
 
@@ -27,22 +27,37 @@ module Tpeg
           break
         end
 
-        tokens << token(:text, @source[cursor...opening], cursor, opening) if cursor < opening
+        opening_index = opening[:index]
+        tokens << token(:text, @source[cursor...opening_index], cursor, opening_index) if cursor < opening_index
 
-        interpolation_start = opening + 2
-        interpolation_end = @source.index("}}", interpolation_start)
-        raise SyntaxError, "unterminated interpolation" if interpolation_end.nil?
+        value_start = opening_index + 2
+        value_end = @source.index(opening[:close], value_start)
+        raise SyntaxError, "unterminated #{opening[:name]}" if value_end.nil?
 
-        value, value_start, value_end = interpolation_value(interpolation_start, interpolation_end)
-        tokens << token(:interpolation, value, value_start, value_end)
+        value, trimmed_start, trimmed_end = trimmed_value(value_start, value_end)
+        tokens << token(opening[:type], value, trimmed_start, trimmed_end)
 
-        cursor = interpolation_end + 2
+        cursor = value_end + 2
       end
 
       tokens
     end
 
     private
+
+    def next_opening(cursor)
+      [
+        { open: "{{", close: "}}", type: :interpolation, name: "interpolation", index: @source.index("{{", cursor) },
+        { open: "{%", close: "%}", type: :tag, name: "tag", index: @source.index("{%", cursor) }
+      ].select { |delimiter| delimiter[:index] }.min_by { |delimiter| delimiter[:index] }
+    end
+
+    def next_closing(cursor)
+      [
+        { close: "}}", index: @source.index("}}", cursor) },
+        { close: "%}", index: @source.index("%}", cursor) }
+      ].select { |delimiter| delimiter[:index] }.min_by { |delimiter| delimiter[:index] }
+    end
 
     def token(type, value, start_index, end_index)
       line, column = line_and_column(start_index)
@@ -57,7 +72,7 @@ module Tpeg
       )
     end
 
-    def interpolation_value(start_index, end_index)
+    def trimmed_value(start_index, end_index)
       raw_value = @source[start_index...end_index]
       leading_whitespace = raw_value.length - raw_value.lstrip.length
       trailing_whitespace = raw_value.length - raw_value.rstrip.length
