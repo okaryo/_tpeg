@@ -13,6 +13,17 @@ The current supported block is:
 The parser turns this into an `IfNode` with child nodes between the opening
 `if` tag and the matching `end` tag.
 
+The parser also recognizes loop blocks:
+
+```text
+{% for item in items %}
+  {{ item.name }}
+{% end %}
+```
+
+This becomes a `ForNode` with a local variable name, a collection variable path,
+and child nodes. Rendering `ForNode` values is not implemented yet.
+
 ## Truthiness
 
 `if` conditions use Ruby-like truthiness:
@@ -29,11 +40,11 @@ The condition is a variable path resolved through `RenderContext`, so
 ## Current Scope
 
 The current implementation supports nested `if` blocks.
+The parser supports nested `for` blocks, but rendering loops is still pending.
 
 It does not support:
 
 - `else` or `elsif`.
 - Boolean expressions such as `and`, `or`, or `not`.
 - Comparisons.
-- Loops.
 - Calling Ruby methods from conditions.

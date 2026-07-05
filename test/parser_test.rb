@@ -55,6 +55,21 @@ class ParserTest < Minitest::Test
     assert_text_node nodes[0].children[0].children[0], value: "yes", start_offset: 33, end_offset: 36, line: 1, column: 34
   end
 
+  def test_parses_for_block_into_for_node
+    nodes = parse("{% for item in items %}{{ item.name }}{% end %}")
+
+    assert_for_node nodes[0], local_name: "item", collection: "items", start_offset: 3, end_offset: 20, line: 1, column: 4
+    assert_variable_node nodes[0].children[0], name: "item.name", start_offset: 26, end_offset: 35, line: 1, column: 27
+  end
+
+  def test_parses_if_inside_for_block
+    nodes = parse("{% for item in items %}{% if item.active %}yes{% end %}{% end %}")
+
+    assert_for_node nodes[0], local_name: "item", collection: "items", start_offset: 3, end_offset: 20, line: 1, column: 4
+    assert_if_node nodes[0].children[0], condition: "item.active", start_offset: 26, end_offset: 40, line: 1, column: 27
+    assert_text_node nodes[0].children[0].children[0], value: "yes", start_offset: 43, end_offset: 46, line: 1, column: 44
+  end
+
   def test_raises_for_empty_interpolation
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello, {{ }}!")
@@ -97,6 +112,22 @@ class ParserTest < Minitest::Test
     assert_equal "unterminated if block", error.message
   end
 
+  def test_raises_for_invalid_for_tag
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("{% for item items %}{% end %}")
+    end
+
+    assert_equal 'invalid for tag: "for item items"', error.message
+  end
+
+  def test_raises_for_unterminated_for_block
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("{% for item in items %}")
+    end
+
+    assert_equal "unterminated for block", error.message
+  end
+
   private
 
   def parse(source)
@@ -124,6 +155,13 @@ class ParserTest < Minitest::Test
   def assert_if_node(node, condition:, start_offset:, end_offset:, line:, column:)
     assert_instance_of Tpeg::IfNode, node
     assert_equal condition, node.condition
+    assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
+  end
+
+  def assert_for_node(node, local_name:, collection:, start_offset:, end_offset:, line:, column:)
+    assert_instance_of Tpeg::ForNode, node
+    assert_equal local_name, node.local_name
+    assert_equal collection, node.collection
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 
