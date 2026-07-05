@@ -127,7 +127,8 @@ Questions to answer:
 
 - [x] Tokenize control tags such as `{% if user %}`.
 - [x] Parse control tag tokens into tag nodes.
-- [ ] Add conditional blocks.
+- [ ] Parse conditional blocks.
+- [ ] Render conditional blocks.
 - [ ] Add loop blocks.
 - [ ] Validate nested block structure.
 - [ ] Decide truthiness and empty collection behavior.
@@ -255,3 +256,5 @@ changes.
 - Added lexer support for `{% ... %}` control tag tokens as the first control
   flow boundary.
 - Added `TagNode` as the parser representation for raw control tags.
+- Added parser support for `{% if condition %}...{% end %}` as nested `IfNode`
+  structures. Rendering conditional blocks is still pending.

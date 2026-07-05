@@ -31,11 +31,28 @@ class ParserTest < Minitest::Test
   end
 
   def test_parses_tag_tokens_into_tag_nodes
-    nodes = parse("Hello {% if user %}!")
+    nodes = parse("Hello {% unknown user %}!")
 
     assert_text_node nodes[0], value: "Hello ", start_offset: 0, end_offset: 6, line: 1, column: 1
-    assert_tag_node nodes[1], value: "if user", start_offset: 9, end_offset: 16, line: 1, column: 10
-    assert_text_node nodes[2], value: "!", start_offset: 19, end_offset: 20, line: 1, column: 20
+    assert_tag_node nodes[1], value: "unknown user", start_offset: 9, end_offset: 21, line: 1, column: 10
+    assert_text_node nodes[2], value: "!", start_offset: 24, end_offset: 25, line: 1, column: 25
+  end
+
+  def test_parses_if_block_into_if_node
+    nodes = parse("Hello {% if user %}{{ user.name }}{% end %}!")
+
+    assert_text_node nodes[0], value: "Hello ", start_offset: 0, end_offset: 6, line: 1, column: 1
+    assert_if_node nodes[1], condition: "user", start_offset: 9, end_offset: 16, line: 1, column: 10
+    assert_variable_node nodes[1].children[0], name: "user.name", start_offset: 22, end_offset: 31, line: 1, column: 23
+    assert_text_node nodes[2], value: "!", start_offset: 43, end_offset: 44, line: 1, column: 44
+  end
+
+  def test_parses_nested_if_blocks
+    nodes = parse("{% if user %}{% if user.active %}yes{% end %}{% end %}")
+
+    assert_if_node nodes[0], condition: "user", start_offset: 3, end_offset: 10, line: 1, column: 4
+    assert_if_node nodes[0].children[0], condition: "user.active", start_offset: 16, end_offset: 30, line: 1, column: 17
+    assert_text_node nodes[0].children[0].children[0], value: "yes", start_offset: 33, end_offset: 36, line: 1, column: 34
   end
 
   def test_raises_for_empty_interpolation
@@ -64,6 +81,22 @@ class ParserTest < Minitest::Test
     assert_equal "unknown token type: :unknown", error.message
   end
 
+  def test_raises_for_unexpected_end_tag
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello {% end %}")
+    end
+
+    assert_equal "unexpected end tag", error.message
+  end
+
+  def test_raises_for_unterminated_if_block
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("Hello {% if user %}")
+    end
+
+    assert_equal "unterminated if block", error.message
+  end
+
   private
 
   def parse(source)
@@ -85,6 +118,12 @@ class ParserTest < Minitest::Test
   def assert_tag_node(node, value:, start_offset:, end_offset:, line:, column:)
     assert_instance_of Tpeg::TagNode, node
     assert_equal value, node.value
+    assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
+  end
+
+  def assert_if_node(node, condition:, start_offset:, end_offset:, line:, column:)
+    assert_instance_of Tpeg::IfNode, node
+    assert_equal condition, node.condition
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 
