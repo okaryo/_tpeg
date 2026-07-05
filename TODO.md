@@ -112,7 +112,7 @@ Questions to answer:
 
 - [x] Add HTML escaping for interpolated values.
 - [x] Decide the default escaping behavior.
-- [ ] Add explicit raw output syntax or API if useful.
+- [x] Add explicit raw output syntax or API if useful.
 - [ ] Avoid double escaping where practical.
 - [ ] Compare selected behavior with ERB or Rails escaping.
 
@@ -244,3 +244,5 @@ changes.
   top-level values and fall back to parent lookup.
 - Added default HTML escaping for interpolated values using Ruby's standard
   `CGI.escapeHTML`.
+- Added `Tpeg.raw(value)` as an explicit API for values that should bypass HTML
+  escaping.

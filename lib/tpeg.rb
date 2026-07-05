@@ -11,4 +11,8 @@ module Tpeg
   def self.render(source, context = {})
     Template.new(source).render(context)
   end
+
+  def self.raw(value)
+    HtmlSafeString.new(value.to_s)
+  end
 end

@@ -10,4 +10,8 @@ class HtmlEscapeTest < Minitest::Test
   def test_converts_non_string_values
     assert_equal "3", Tpeg::HtmlEscape.escape(3)
   end
+
+  def test_does_not_escape_html_safe_string
+    assert_equal "<strong>Ruby</strong>", Tpeg::HtmlEscape.escape(Tpeg.raw("<strong>Ruby</strong>"))
+  end
 end

@@ -35,6 +35,10 @@ class TpegTest < Minitest::Test
     assert_equal "<p>Ruby</p>", Tpeg.render("<p>Ruby</p>")
   end
 
+  def test_renders_raw_value_without_escaping
+    assert_equal "<strong>Ruby</strong>", Tpeg.render("{{ name }}", name: Tpeg.raw("<strong>Ruby</strong>"))
+  end
+
   def test_raises_for_missing_variable
     error = assert_raises(Tpeg::MissingVariable) do
       Tpeg.render("Hello, {{ name }}!")
