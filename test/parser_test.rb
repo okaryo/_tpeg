@@ -122,6 +122,19 @@ class ParserTest < Minitest::Test
                         column: 4
   end
 
+  def test_parses_render_tag_with_explicit_local_name
+    nodes = parse("{% render card with user.profile as profile %}")
+
+    assert_partial_node nodes[0],
+                        name: "card",
+                        local_name: "profile",
+                        value_path: "user.profile",
+                        start_offset: 3,
+                        end_offset: 43,
+                        line: 1,
+                        column: 4
+  end
+
   def test_raises_for_empty_interpolation
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello, {{ }}!")
@@ -202,6 +215,14 @@ class ParserTest < Minitest::Test
     end
 
     assert_equal 'invalid variable name: "user..profile"', error.message
+  end
+
+  def test_raises_for_invalid_render_local_name
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("{% render card with user as profile.name %}")
+    end
+
+    assert_equal 'invalid variable name: "user as profile.name"', error.message
   end
 
   def test_raises_for_unterminated_for_block

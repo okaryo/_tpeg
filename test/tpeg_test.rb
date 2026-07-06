@@ -169,6 +169,13 @@ class TpegTest < Minitest::Test
     assert_equal "Ruby", Tpeg.render("{% render card with user %}", context, loader: loader)
   end
 
+  def test_renders_partial_with_explicit_local_name
+    loader = Tpeg::HashLoader.new(card: "{{ profile.name }}")
+    context = { user: { name: "Ruby" } }
+
+    assert_equal "Ruby", Tpeg.render("{% render card with user as profile %}", context, loader: loader)
+  end
+
   def test_raises_when_rendering_partial_without_loader
     error = assert_raises(Tpeg::Error) do
       Tpeg.render("{% render greeting %}")

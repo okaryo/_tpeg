@@ -15,7 +15,7 @@ module Tpeg
     FILTER_NAME = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
     HELPER_CALL = /\A([a-zA-Z_][a-zA-Z0-9_]*)\((.*)\)\z/.freeze
     FOR_TAG = /\Afor\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+in\s+(.+)\z/.freeze
-    PARTIAL_TAG = /\Arender\s+([a-zA-Z_][a-zA-Z0-9_\/-]*)(?:\s+with\s+(.+))?\z/.freeze
+    PARTIAL_TAG = /\Arender\s+([a-zA-Z_][a-zA-Z0-9_\/-]*)(?:\s+with\s+(.+?)(?:\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*))?)?\z/.freeze
 
     def initialize(tokens)
       @tokens = tokens
@@ -105,9 +105,10 @@ module Tpeg
 
       name = match[1]
       value_path = match[2]&.strip
+      local_name = match[3] || name
       validate_variable_name(value_path) if value_path
 
-      PartialNode.new(**source_fields(token), name: name, local_name: name, value_path: value_path)
+      PartialNode.new(**source_fields(token), name: name, local_name: local_name, value_path: value_path)
     end
 
     def current_token

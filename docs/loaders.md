@@ -76,6 +76,20 @@ Tpeg.render("{% render card with user %}", { user: { name: "Ruby" } }, loader: l
 stores it as a partial-local value using the partial name. In the example above,
 `user` is passed into the partial as `card`.
 
+The local name can also be explicit:
+
+```ruby
+loader = Tpeg::HashLoader.new(
+  card: "{{ profile.name }}"
+)
+
+Tpeg.render("{% render card with user as profile %}", { user: { name: "Ruby" } }, loader: loader)
+# => "Ruby"
+```
+
+`as` only changes the local name inside the partial; it does not change which
+template is loaded.
+
 File-backed loading, path normalization, extension handling, caching, explicit
-partial keyword arguments, and context isolation are intentionally left for later
-steps.
+multiple partial arguments, and context isolation are intentionally left for
+later steps.

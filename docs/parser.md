@@ -30,7 +30,8 @@ nodes. Nested `if` blocks are parsed recursively.
 way.
 `{% render greeting %}` is parsed into a `PartialNode` that keeps the template
 name for the renderer. `{% render card with user %}` also stores the value path
-that should be passed into the partial.
+that should be passed into the partial. `{% render card with user as profile %}`
+also stores the explicit local name.
 
 ## Current Scope
 

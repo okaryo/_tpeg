@@ -150,7 +150,7 @@ Questions to answer:
 - [x] Add a minimal helper call syntax.
 - [x] Add a template loader abstraction.
 - [x] Implement partial rendering.
-- [ ] Explore layout rendering if it remains useful.
+- [x] Explore layout rendering and defer it for now.
 
 Questions to answer:
 
@@ -287,3 +287,7 @@ changes.
 - Added `{% render name %}` partial rendering with the current render context.
 - Added `{% render name with value.path %}` for passing one explicit value into
   a partial-local variable.
+- Added `{% render name with value.path as local_name %}` for explicit partial
+  local names.
+- Decided to defer layout rendering until after studying interpretation,
+  caching, and diagnostics.

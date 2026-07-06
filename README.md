@@ -119,3 +119,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/filters.md`: notes on interpolation filters and render order.
 - `docs/helpers.md`: notes on helper registration direction and safety.
 - `docs/loaders.md`: notes on resolving template names to source.
+- `docs/layouts.md`: notes on deferring layout rendering and why.
