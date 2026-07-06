@@ -60,7 +60,7 @@ module Tpeg
       when :text
         TextNode.new(**source_fields(token), value: token.value)
       when :interpolation
-        expression, filters = parse_filtered_expression(token.value)
+        expression, filters = parse_filtered_expression(token.value, token)
         node_for_interpolation_expression(expression, filters, token)
       when :tag
         node_for_tag(token)
@@ -107,7 +107,7 @@ module Tpeg
       name = match[1]
       value_path = match[2]&.strip
       local_name = match[3] || name
-      validate_variable_name(value_path) if value_path
+      validate_variable_name(value_path, token) if value_path
 
       PartialNode.new(**source_fields(token), name: name, local_name: local_name, value_path: value_path)
     end
@@ -120,22 +120,22 @@ module Tpeg
       token.type == :tag && token.value == "end"
     end
 
-    def validate_variable_name(name)
-      raise SyntaxError, "empty interpolation" if name.empty?
+    def validate_variable_name(name, token = nil)
+      validation_error(token, "empty interpolation") if name.empty?
       return if VARIABLE_PATH.match?(name)
 
-      raise SyntaxError, "invalid variable name: #{name.inspect}"
+      validation_error(token, "invalid variable name: #{name.inspect}")
     end
 
-    def parse_filtered_expression(value)
+    def parse_filtered_expression(value, token)
       parts = value.split("|", -1).map(&:strip)
       expression = parts.shift || ""
       filters = parts
 
-      raise SyntaxError, "empty interpolation" if expression.empty?
+      validation_error(token, "empty interpolation") if expression.empty?
 
       filters.each do |filter|
-        raise SyntaxError, "invalid filter name: #{filter.inspect}" unless FILTER_NAME.match?(filter)
+        validation_error(token, "invalid filter name: #{filter.inspect}") unless FILTER_NAME.match?(filter)
       end
 
       [expression, filters]
@@ -145,7 +145,7 @@ module Tpeg
       helper_match = HELPER_CALL.match(expression)
       return node_for_helper_expression(helper_match, filters, token) if helper_match
 
-      validate_variable_name(expression)
+      validate_variable_name(expression, token)
       VariableNode.new(**source_fields(token), name: expression, filters: filters)
     end
 
@@ -153,16 +153,16 @@ module Tpeg
       HelperNode.new(
         **source_fields(token),
         name: match[1],
-        arguments: parse_helper_arguments(match[2]),
+        arguments: parse_helper_arguments(match[2], token),
         filters: filters
       )
     end
 
-    def parse_helper_arguments(source)
+    def parse_helper_arguments(source, token)
       return [] if source.strip.empty?
 
       source.split(",", -1).map(&:strip).each do |argument|
-        raise SyntaxError, "invalid helper argument: #{argument.inspect}" unless VARIABLE_PATH.match?(argument)
+        validation_error(token, "invalid helper argument: #{argument.inspect}") unless VARIABLE_PATH.match?(argument)
       end
     end
 
@@ -177,6 +177,10 @@ module Tpeg
 
     def syntax_error(token, message)
       raise SyntaxError, "#{message} at line #{token.line}, column #{token.column}"
+    end
+
+    def validation_error(token, message)
+      token ? syntax_error(token, message) : raise(SyntaxError, message)
     end
   end
 end

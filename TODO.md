@@ -308,3 +308,5 @@ changes.
   cached `Template#render`.
 - Added line and column information to parser syntax errors that are directly
   tied to lexer tokens.
+- Added line and column information to parser validation errors for
+  interpolation variables, filters, helper arguments, and render tag values.

@@ -5,20 +5,25 @@ author can find and fix the problem.
 
 ## Current Scope
 
-Some parser errors now include token source location:
+Parser errors now include token source location when the parser can associate
+the error with a lexer token:
 
 ```text
 unknown tag: "unknown user" at line 1, column 10
+invalid variable name: "user..name" at line 1, column 11
 ```
 
-This currently applies to errors that are directly tied to a lexer token, such
-as:
+This currently applies to:
 
 - unexpected `end` tags
 - unknown token types
 - unknown tags
 - invalid `for` tags
 - invalid `render` tags
+- empty interpolation markers
+- invalid variable names
+- invalid filter names
+- invalid helper arguments
 
 The parser uses token metadata from the lexer:
 
@@ -28,13 +33,12 @@ source -> lexer token(line, column) -> parser error
 
 ## Remaining Gaps
 
-Not all errors include source locations yet. For example, variable-name
-validation errors and some interpolation expression errors still report only the
-invalid value.
+Not all errors include source locations yet. Unterminated block errors currently
+know the block type, but they do not point back to the opening block location.
+Lexer delimiter errors also do not include a source snippet yet.
 
 Useful next improvements:
 
-- carry token information into variable/filter/helper validation
 - include source snippets and a caret marker
 - distinguish opening block locations from closing or missing block errors
 - add render-time locations for missing variables, unknown helpers, and unknown

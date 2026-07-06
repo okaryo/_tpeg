@@ -140,7 +140,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ }}!")
     end
 
-    assert_equal "empty interpolation", error.message
+    assert_equal "empty interpolation at line 1, column 11", error.message
   end
 
   def test_raises_for_invalid_variable_name
@@ -148,7 +148,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ user..name }}!")
     end
 
-    assert_equal 'invalid variable name: "user..name"', error.message
+    assert_equal 'invalid variable name: "user..name" at line 1, column 11', error.message
   end
 
   def test_raises_for_invalid_filter_name
@@ -156,7 +156,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ name | }}!")
     end
 
-    assert_equal 'invalid filter name: ""', error.message
+    assert_equal 'invalid filter name: "" at line 1, column 11', error.message
   end
 
   def test_raises_for_invalid_helper_argument
@@ -164,7 +164,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ link_to(label, ) }}!")
     end
 
-    assert_equal 'invalid helper argument: ""', error.message
+    assert_equal 'invalid helper argument: "" at line 1, column 11', error.message
   end
 
   def test_raises_for_unknown_token_type
@@ -214,7 +214,7 @@ class ParserTest < Minitest::Test
       parse("{% render card with user..profile %}")
     end
 
-    assert_equal 'invalid variable name: "user..profile"', error.message
+    assert_equal 'invalid variable name: "user..profile" at line 1, column 4', error.message
   end
 
   def test_raises_for_invalid_render_local_name
@@ -222,7 +222,7 @@ class ParserTest < Minitest::Test
       parse("{% render card with user as profile.name %}")
     end
 
-    assert_equal 'invalid variable name: "user as profile.name"', error.message
+    assert_equal 'invalid variable name: "user as profile.name" at line 1, column 4', error.message
   end
 
   def test_raises_for_unterminated_for_block

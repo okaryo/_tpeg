@@ -221,7 +221,7 @@ class TpegTest < Minitest::Test
       Tpeg.render("Hello, {{ }}!")
     end
 
-    assert_equal "empty interpolation", error.message
+    assert_equal "empty interpolation at line 1, column 11", error.message
   end
 
   def test_raises_for_invalid_variable_name
@@ -229,7 +229,7 @@ class TpegTest < Minitest::Test
       Tpeg.render("Hello, {{ user..name }}!", { user: { name: "Ruby" } })
     end
 
-    assert_equal 'invalid variable name: "user..name"', error.message
+    assert_equal 'invalid variable name: "user..name" at line 1, column 11', error.message
   end
 
   def test_raises_for_invalid_context
