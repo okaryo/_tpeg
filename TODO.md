@@ -164,7 +164,7 @@ Questions to answer:
 - [x] Compare direct AST interpretation with generated Ruby code.
 - [x] Add an object-local parsed-template cache.
 - [x] Explore compiled render methods or procs and defer implementation.
-- [ ] Add small benchmarks.
+- [x] Add small benchmarks.
 - [ ] Document tradeoffs and known limitations.
 
 Questions to answer:
@@ -300,3 +300,5 @@ changes.
 - Explored compiled render procs as a possible middle ground between AST
   interpretation and generated Ruby, and deferred implementation until there is
   a benchmark baseline.
+- Added `benchmarks/render_benchmark.rb` as a small baseline for direct
+  rendering, cached template rendering, loops, and partials.

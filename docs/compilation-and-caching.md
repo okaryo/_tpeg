@@ -87,3 +87,28 @@ code generator:
 The current implementation does not compile render procs yet. The next useful
 learning step is to measure the current direct interpreter first, so any
 compiled implementation has a concrete baseline to compare against.
+
+## Benchmark Baseline
+
+The repository includes a small benchmark script:
+
+```sh
+ruby benchmarks/render_benchmark.rb
+```
+
+Use `ITERATIONS` to change the loop count:
+
+```sh
+ITERATIONS=10000 ruby benchmarks/render_benchmark.rb
+```
+
+The benchmark compares:
+
+- `Tpeg.render`, which creates a new `Template` and parses source each time
+- reused `Template#render`, which reuses memoized parsed nodes
+- loop rendering through the direct interpreter
+- partial rendering with object-local partial node caching
+
+The numbers are not a production performance claim. They are a baseline for
+future experiments such as compiled render procs, generated Ruby, broader
+template caches, or file-backed loader invalidation.
