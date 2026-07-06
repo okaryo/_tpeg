@@ -118,3 +118,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/control-flow.md`: notes on conditional block rendering.
 - `docs/filters.md`: notes on interpolation filters and render order.
 - `docs/helpers.md`: notes on helper registration direction and safety.
+- `docs/loaders.md`: notes on resolving template names to source.
