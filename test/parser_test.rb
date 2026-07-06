@@ -66,7 +66,7 @@ class ParserTest < Minitest::Test
       parse("Hello {% unknown user %}!")
     end
 
-    assert_equal 'unknown tag: "unknown user"', error.message
+    assert_equal 'unknown tag: "unknown user" at line 1, column 10', error.message
   end
 
   def test_parses_if_block_into_if_node
@@ -174,7 +174,7 @@ class ParserTest < Minitest::Test
       Tpeg::Parser.new([token]).nodes
     end
 
-    assert_equal "unknown token type: :unknown", error.message
+    assert_equal "unknown token type: :unknown at line 1, column 1", error.message
   end
 
   def test_raises_for_unexpected_end_tag
@@ -182,7 +182,7 @@ class ParserTest < Minitest::Test
       parse("Hello {% end %}")
     end
 
-    assert_equal "unexpected end tag", error.message
+    assert_equal "unexpected end tag at line 1, column 10", error.message
   end
 
   def test_raises_for_unterminated_if_block
@@ -198,7 +198,7 @@ class ParserTest < Minitest::Test
       parse("{% for item items %}{% end %}")
     end
 
-    assert_equal 'invalid for tag: "for item items"', error.message
+    assert_equal 'invalid for tag: "for item items" at line 1, column 4', error.message
   end
 
   def test_raises_for_invalid_render_tag
@@ -206,7 +206,7 @@ class ParserTest < Minitest::Test
       parse("{% render %}")
     end
 
-    assert_equal 'invalid render tag: "render"', error.message
+    assert_equal 'invalid render tag: "render" at line 1, column 4', error.message
   end
 
   def test_raises_for_invalid_render_value_path

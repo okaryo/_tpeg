@@ -177,6 +177,7 @@ Questions to answer:
 ### 9. Robustness And Diagnostics
 
 - [ ] Improve parse and render error classes.
+- [x] Add line and column to token-based parser syntax errors.
 - [ ] Include source snippets in syntax errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
@@ -305,3 +306,5 @@ changes.
 - Documented benchmark observations: parse caching is the first obvious
   optimization boundary, and compiled approaches should be compared against
   cached `Template#render`.
+- Added line and column information to parser syntax errors that are directly
+  tied to lexer tokens.

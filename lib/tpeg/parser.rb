@@ -33,10 +33,11 @@ module Tpeg
 
       while current_token
         if end_tag?(current_token)
+          token = current_token
           @position += 1
           return nodes if stop_at_end
 
-          raise SyntaxError, "unexpected end tag"
+          syntax_error(token, "unexpected end tag")
         end
 
         nodes << consume_node
@@ -64,7 +65,7 @@ module Tpeg
       when :tag
         node_for_tag(token)
       else
-        raise SyntaxError, "unknown token type: #{token.type.inspect}"
+        syntax_error(token, "unknown token type: #{token.type.inspect}")
       end
     end
 
@@ -73,7 +74,7 @@ module Tpeg
       return parse_for_node(token) if token.value.start_with?("for ")
       return parse_partial_node(token) if token.value == "render" || token.value.start_with?("render ")
 
-      raise SyntaxError, "unknown tag: #{token.value.inspect}"
+      syntax_error(token, "unknown tag: #{token.value.inspect}")
     end
 
     def parse_if_node(token)
@@ -85,7 +86,7 @@ module Tpeg
 
     def parse_for_node(token)
       match = FOR_TAG.match(token.value)
-      raise SyntaxError, "invalid for tag: #{token.value.inspect}" if match.nil?
+      syntax_error(token, "invalid for tag: #{token.value.inspect}") if match.nil?
 
       local_name = match[1]
       collection = match[2].strip
@@ -101,7 +102,7 @@ module Tpeg
 
     def parse_partial_node(token)
       match = PARTIAL_TAG.match(token.value)
-      raise SyntaxError, "invalid render tag: #{token.value.inspect}" if match.nil?
+      syntax_error(token, "invalid render tag: #{token.value.inspect}") if match.nil?
 
       name = match[1]
       value_path = match[2]&.strip
@@ -172,6 +173,10 @@ module Tpeg
         line: token.line,
         column: token.column
       }
+    end
+
+    def syntax_error(token, message)
+      raise SyntaxError, "#{message} at line #{token.line}, column #{token.column}"
     end
   end
 end

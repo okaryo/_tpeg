@@ -121,3 +121,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/loaders.md`: notes on resolving template names to source.
 - `docs/layouts.md`: notes on deferring layout rendering and why.
 - `docs/compilation-and-caching.md`: notes on AST interpretation and caching.
+- `docs/diagnostics.md`: notes on error messages and source locations.
