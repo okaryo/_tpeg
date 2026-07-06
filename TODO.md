@@ -293,3 +293,5 @@ changes.
   caching, and diagnostics.
 - Added `Tpeg::Template#nodes` so each template instance memoizes parsed AST
   nodes and can render repeatedly without reparsing its own source.
+- Added object-local partial node caching by partial name for templates rendered
+  through a loader.

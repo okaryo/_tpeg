@@ -26,9 +26,19 @@ The first render parses the source into nodes. Later renders of the same
 This is an object-local cache:
 
 - it does not share parsed nodes across different `Template` instances
-- it does not cache templates loaded through `Tpeg::HashLoader`
 - it does not generate Ruby code
 - it does not solve file invalidation
+
+Partial templates loaded through a loader are also memoized inside the rendering
+`Template` instance by partial name. If the same instance renders
+`{% render greeting %}` more than once, the loader is asked for `greeting` once
+and the parsed partial nodes are reused.
+
+This partial cache is also object-local:
+
+- it does not share partial nodes across different `Template` instances
+- it uses the partial name as the cache key
+- it does not detect changes in loader-backed source
 
 ## Direct Interpretation Versus Generated Ruby
 

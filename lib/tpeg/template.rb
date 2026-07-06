@@ -15,6 +15,7 @@ module Tpeg
       @filters = Filters.registry(filters)
       @helpers = Helpers.registry(helpers)
       @loader = loader
+      @partial_nodes_by_name = {}
     end
 
     def render(context = {})
@@ -104,10 +105,16 @@ module Tpeg
     def render_partial(node, render_context)
       raise Error, "loader is required to render partial: #{node.name}" if @loader.nil?
 
-      source = @loader.load(node.name)
       partial_context = partial_render_context(node, render_context)
 
-      render_nodes(Parser.new(Lexer.new(source).tokens).nodes, partial_context)
+      render_nodes(partial_nodes(node.name), partial_context)
+    end
+
+    def partial_nodes(name)
+      @partial_nodes_by_name[name] ||= begin
+        source = @loader.load(name)
+        Parser.new(Lexer.new(source).tokens).nodes
+      end
     end
 
     def partial_render_context(node, render_context)
