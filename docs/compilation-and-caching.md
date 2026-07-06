@@ -112,3 +112,28 @@ The benchmark compares:
 The numbers are not a production performance claim. They are a baseline for
 future experiments such as compiled render procs, generated Ruby, broader
 template caches, or file-backed loader invalidation.
+
+## Benchmark Observations
+
+An early run with `ITERATIONS=10000` showed the expected shape:
+
+- repeatedly calling `Tpeg.render` is much slower than reusing one
+  `Tpeg::Template` instance
+- object-local node caching removes a large amount of parse/setup cost
+- loop rendering is slower than simple interpolation because lookup, condition
+  checks, child contexts, and repeated output appends happen at render time
+- partial rendering is close to loop rendering once partial nodes are cached,
+  but it still has runtime cost for partial dispatch and context handling
+
+The main learning point is that parsing is an obvious first cache boundary.
+Compiled procs or generated Ruby should be compared against cached
+`Template#render`, not against `Tpeg.render`, because otherwise the benchmark
+mostly measures parsing instead of render execution.
+
+Useful next measurements:
+
+- simple cached render with many interpolations
+- loop render with larger collections
+- partial render with and without partial node caching
+- helper/filter-heavy render paths
+- allocation counts, not only elapsed time

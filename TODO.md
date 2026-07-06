@@ -165,7 +165,7 @@ Questions to answer:
 - [x] Add an object-local parsed-template cache.
 - [x] Explore compiled render methods or procs and defer implementation.
 - [x] Add small benchmarks.
-- [ ] Document tradeoffs and known limitations.
+- [x] Document tradeoffs and known limitations.
 
 Questions to answer:
 
@@ -302,3 +302,6 @@ changes.
   a benchmark baseline.
 - Added `benchmarks/render_benchmark.rb` as a small baseline for direct
   rendering, cached template rendering, loops, and partials.
+- Documented benchmark observations: parse caching is the first obvious
+  optimization boundary, and compiled approaches should be compared against
+  cached `Template#render`.
