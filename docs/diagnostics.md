@@ -32,14 +32,22 @@ The parser uses token metadata from the lexer:
 source -> lexer token(line, column) -> parser error
 ```
 
+Lexer delimiter errors include a source line and caret marker:
+
+```text
+unterminated interpolation at line 1, column 8
+Hello, {{ name
+       ^
+```
+
 ## Remaining Gaps
 
-Not all errors include source locations yet. Lexer delimiter errors do not
-include a source snippet yet, and render-time errors still report only the
+Not all errors include source snippets yet. Parser errors currently include line
+and column but not the source line. Render-time errors still report only the
 runtime value path or helper/filter name.
 
 Useful next improvements:
 
-- include source snippets and a caret marker
+- include source snippets and a caret marker for parser errors
 - add render-time locations for missing variables, unknown helpers, and unknown
   filters

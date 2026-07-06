@@ -19,7 +19,7 @@ module Tpeg
         closing = next_closing(cursor)
 
         if closing && (opening.nil? || closing[:index] < opening[:index])
-          raise SyntaxError, "unexpected closing delimiter"
+          delimiter_error("unexpected closing delimiter", closing[:index])
         end
 
         if opening.nil?
@@ -32,7 +32,7 @@ module Tpeg
 
         value_start = opening_index + 2
         value_end = @source.index(opening[:close], value_start)
-        raise SyntaxError, "unterminated #{opening[:name]}" if value_end.nil?
+        delimiter_error("unterminated #{opening[:name]}", opening_index) if value_end.nil?
 
         value, trimmed_start, trimmed_end = trimmed_value(value_start, value_end)
         tokens << token(opening[:type], value, trimmed_start, trimmed_end)
@@ -96,6 +96,22 @@ module Tpeg
       column = last_newline.nil? ? before.length + 1 : before.length - last_newline
 
       [line, column]
+    end
+
+    def delimiter_error(message, index)
+      line, column = line_and_column(index)
+      raise SyntaxError, "#{message} at line #{line}, column #{column}\n#{source_line(index)}\n#{caret(column)}"
+    end
+
+    def source_line(index)
+      line_start = @source.rindex("\n", index)&.+(1) || 0
+      line_end = @source.index("\n", index) || @source.length
+
+      @source[line_start...line_end]
+    end
+
+    def caret(column)
+      "#{' ' * (column - 1)}^"
     end
   end
 end

@@ -205,7 +205,7 @@ class TpegTest < Minitest::Test
       Tpeg.render("Hello, {{ name")
     end
 
-    assert_equal "unterminated interpolation", error.message
+    assert_equal "unterminated interpolation at line 1, column 8\nHello, {{ name\n       ^", error.message
   end
 
   def test_raises_for_unexpected_closing_delimiter
@@ -213,7 +213,7 @@ class TpegTest < Minitest::Test
       Tpeg.render("Hello }}")
     end
 
-    assert_equal "unexpected closing delimiter", error.message
+    assert_equal "unexpected closing delimiter at line 1, column 7\nHello }}\n      ^", error.message
   end
 
   def test_raises_for_empty_interpolation

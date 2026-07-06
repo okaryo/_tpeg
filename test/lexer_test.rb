@@ -69,7 +69,7 @@ class LexerTest < Minitest::Test
       Tpeg::Lexer.new("Hello, {{ name").tokens
     end
 
-    assert_equal "unterminated interpolation", error.message
+    assert_equal "unterminated interpolation at line 1, column 8\nHello, {{ name\n       ^", error.message
   end
 
   def test_raises_for_unexpected_closing_delimiter
@@ -77,7 +77,7 @@ class LexerTest < Minitest::Test
       Tpeg::Lexer.new("Hello }}").tokens
     end
 
-    assert_equal "unexpected closing delimiter", error.message
+    assert_equal "unexpected closing delimiter at line 1, column 7\nHello }}\n      ^", error.message
   end
 
   def test_raises_for_unterminated_control_tag
@@ -85,7 +85,7 @@ class LexerTest < Minitest::Test
       Tpeg::Lexer.new("Hello {% if user").tokens
     end
 
-    assert_equal "unterminated tag", error.message
+    assert_equal "unterminated tag at line 1, column 7\nHello {% if user\n      ^", error.message
   end
 
   def test_raises_for_unexpected_control_tag_closing_delimiter
@@ -93,7 +93,7 @@ class LexerTest < Minitest::Test
       Tpeg::Lexer.new("Hello %}").tokens
     end
 
-    assert_equal "unexpected closing delimiter", error.message
+    assert_equal "unexpected closing delimiter at line 1, column 7\nHello %}\n      ^", error.message
   end
 
   private
