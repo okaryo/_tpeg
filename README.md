@@ -120,3 +120,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/helpers.md`: notes on helper registration direction and safety.
 - `docs/loaders.md`: notes on resolving template names to source.
 - `docs/layouts.md`: notes on deferring layout rendering and why.
+- `docs/compilation-and-caching.md`: notes on AST interpretation and caching.

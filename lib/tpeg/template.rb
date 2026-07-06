@@ -19,7 +19,11 @@ module Tpeg
 
     def render(context = {})
       render_context = RenderContext.new(context)
-      render_nodes(Parser.new(Lexer.new(@source).tokens).nodes, render_context)
+      render_nodes(nodes, render_context)
+    end
+
+    def nodes
+      @nodes ||= Parser.new(Lexer.new(@source).tokens).nodes
     end
 
     private

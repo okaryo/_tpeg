@@ -161,8 +161,8 @@ Questions to answer:
 
 ### 8. Compilation And Caching
 
-- [ ] Compare direct AST interpretation with generated Ruby code.
-- [ ] Add a parsed-template cache.
+- [x] Compare direct AST interpretation with generated Ruby code.
+- [x] Add an object-local parsed-template cache.
 - [ ] Explore compiled render methods or procs.
 - [ ] Add small benchmarks.
 - [ ] Document tradeoffs and known limitations.
@@ -291,3 +291,5 @@ changes.
   local names.
 - Decided to defer layout rendering until after studying interpretation,
   caching, and diagnostics.
+- Added `Tpeg::Template#nodes` so each template instance memoizes parsed AST
+  nodes and can render repeatedly without reparsing its own source.
