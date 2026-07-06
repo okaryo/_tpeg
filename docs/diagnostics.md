@@ -10,7 +10,8 @@ the error with a lexer token:
 
 ```text
 unknown tag: "unknown user" at line 1, column 10
-invalid variable name: "user..name" at line 1, column 11
+Hello {% unknown user %}!
+         ^
 ```
 
 This currently applies to:
@@ -32,7 +33,7 @@ The parser uses token metadata from the lexer:
 source -> lexer token(line, column) -> parser error
 ```
 
-Lexer delimiter errors include a source line and caret marker:
+Lexer delimiter errors use the same source line and caret marker format:
 
 ```text
 unterminated interpolation at line 1, column 8
@@ -42,12 +43,10 @@ Hello, {{ name
 
 ## Remaining Gaps
 
-Not all errors include source snippets yet. Parser errors currently include line
-and column but not the source line. Render-time errors still report only the
-runtime value path or helper/filter name.
+Render-time errors still report only the runtime value path or helper/filter
+name. They do not yet point back to the node that requested the lookup or call.
 
 Useful next improvements:
 
-- include source snippets and a caret marker for parser errors
 - add render-time locations for missing variables, unknown helpers, and unknown
   filters

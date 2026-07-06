@@ -17,8 +17,9 @@ module Tpeg
     FOR_TAG = /\Afor\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+in\s+(.+)\z/.freeze
     PARTIAL_TAG = /\Arender\s+([a-zA-Z_][a-zA-Z0-9_\/-]*)(?:\s+with\s+(.+?)(?:\s+as\s+([a-zA-Z_][a-zA-Z0-9_]*))?)?\z/.freeze
 
-    def initialize(tokens)
+    def initialize(tokens, source: nil)
       @tokens = tokens
+      @source = source
       @position = 0
     end
 
@@ -180,11 +181,30 @@ module Tpeg
     end
 
     def syntax_error(token, message)
-      raise SyntaxError, "#{message} at line #{token.line}, column #{token.column}"
+      message = "#{message} at line #{token.line}, column #{token.column}"
+      message = "#{message}\n#{source_line(token)}\n#{caret(token.column)}" if @source
+
+      raise SyntaxError, message
     end
 
     def validation_error(token, message)
       token ? syntax_error(token, message) : raise(SyntaxError, message)
+    end
+
+    def source_line(token)
+      index = source_index(token)
+      line_start = @source.rindex("\n", index)&.+(1) || 0
+      line_end = @source.index("\n", index) || @source.length
+
+      @source[line_start...line_end]
+    end
+
+    def source_index(token)
+      @source.byteslice(0, token.start_offset).force_encoding(@source.encoding).length
+    end
+
+    def caret(column)
+      "#{' ' * (column - 1)}^"
     end
   end
 end

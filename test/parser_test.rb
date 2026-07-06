@@ -66,7 +66,7 @@ class ParserTest < Minitest::Test
       parse("Hello {% unknown user %}!")
     end
 
-    assert_equal 'unknown tag: "unknown user" at line 1, column 10', error.message
+    assert_equal "unknown tag: \"unknown user\" at line 1, column 10\nHello {% unknown user %}!\n         ^", error.message
   end
 
   def test_parses_if_block_into_if_node
@@ -140,7 +140,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ }}!")
     end
 
-    assert_equal "empty interpolation at line 1, column 11", error.message
+    assert_equal "empty interpolation at line 1, column 11\nHello, {{ }}!\n          ^", error.message
   end
 
   def test_raises_for_invalid_variable_name
@@ -148,7 +148,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ user..name }}!")
     end
 
-    assert_equal 'invalid variable name: "user..name" at line 1, column 11', error.message
+    assert_equal "invalid variable name: \"user..name\" at line 1, column 11\nHello, {{ user..name }}!\n          ^", error.message
   end
 
   def test_raises_for_invalid_filter_name
@@ -156,7 +156,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ name | }}!")
     end
 
-    assert_equal 'invalid filter name: "" at line 1, column 11', error.message
+    assert_equal "invalid filter name: \"\" at line 1, column 11\nHello, {{ name | }}!\n          ^", error.message
   end
 
   def test_raises_for_invalid_helper_argument
@@ -164,7 +164,7 @@ class ParserTest < Minitest::Test
       parse("Hello, {{ link_to(label, ) }}!")
     end
 
-    assert_equal 'invalid helper argument: "" at line 1, column 11', error.message
+    assert_equal "invalid helper argument: \"\" at line 1, column 11\nHello, {{ link_to(label, ) }}!\n          ^", error.message
   end
 
   def test_raises_for_unknown_token_type
@@ -182,7 +182,7 @@ class ParserTest < Minitest::Test
       parse("Hello {% end %}")
     end
 
-    assert_equal "unexpected end tag at line 1, column 10", error.message
+    assert_equal "unexpected end tag at line 1, column 10\nHello {% end %}\n         ^", error.message
   end
 
   def test_raises_for_unterminated_if_block
@@ -190,7 +190,7 @@ class ParserTest < Minitest::Test
       parse("Hello {% if user %}")
     end
 
-    assert_equal "unterminated if block at line 1, column 10", error.message
+    assert_equal "unterminated if block at line 1, column 10\nHello {% if user %}\n         ^", error.message
   end
 
   def test_raises_for_invalid_for_tag
@@ -198,7 +198,7 @@ class ParserTest < Minitest::Test
       parse("{% for item items %}{% end %}")
     end
 
-    assert_equal 'invalid for tag: "for item items" at line 1, column 4', error.message
+    assert_equal "invalid for tag: \"for item items\" at line 1, column 4\n{% for item items %}{% end %}\n   ^", error.message
   end
 
   def test_raises_for_invalid_render_tag
@@ -206,7 +206,7 @@ class ParserTest < Minitest::Test
       parse("{% render %}")
     end
 
-    assert_equal 'invalid render tag: "render" at line 1, column 4', error.message
+    assert_equal "invalid render tag: \"render\" at line 1, column 4\n{% render %}\n   ^", error.message
   end
 
   def test_raises_for_invalid_render_value_path
@@ -214,7 +214,7 @@ class ParserTest < Minitest::Test
       parse("{% render card with user..profile %}")
     end
 
-    assert_equal 'invalid variable name: "user..profile" at line 1, column 4', error.message
+    assert_equal "invalid variable name: \"user..profile\" at line 1, column 4\n{% render card with user..profile %}\n   ^", error.message
   end
 
   def test_raises_for_invalid_render_local_name
@@ -222,7 +222,7 @@ class ParserTest < Minitest::Test
       parse("{% render card with user as profile.name %}")
     end
 
-    assert_equal 'invalid variable name: "user as profile.name" at line 1, column 4', error.message
+    assert_equal "invalid variable name: \"user as profile.name\" at line 1, column 4\n{% render card with user as profile.name %}\n   ^", error.message
   end
 
   def test_raises_for_unterminated_for_block
@@ -230,13 +230,13 @@ class ParserTest < Minitest::Test
       parse("{% for item in items %}")
     end
 
-    assert_equal "unterminated for block at line 1, column 4", error.message
+    assert_equal "unterminated for block at line 1, column 4\n{% for item in items %}\n   ^", error.message
   end
 
   private
 
   def parse(source)
-    Tpeg::Parser.new(Tpeg::Lexer.new(source).tokens).nodes
+    Tpeg::Parser.new(Tpeg::Lexer.new(source).tokens, source: source).nodes
   end
 
   def assert_text_node(node, value:, start_offset:, end_offset:, line:, column:)

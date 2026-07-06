@@ -24,7 +24,7 @@ module Tpeg
     end
 
     def nodes
-      @nodes ||= Parser.new(Lexer.new(@source).tokens).nodes
+      @nodes ||= Parser.new(Lexer.new(@source).tokens, source: @source).nodes
     end
 
     private
@@ -114,7 +114,7 @@ module Tpeg
       return @partial_nodes_by_name[name] if @partial_nodes_by_name.key?(name)
 
       source = @loader.load(name)
-      @partial_nodes_by_name[name] = Parser.new(Lexer.new(source).tokens).nodes
+      @partial_nodes_by_name[name] = Parser.new(Lexer.new(source).tokens, source: source).nodes
     end
 
     def partial_render_context(node, render_context)

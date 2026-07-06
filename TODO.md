@@ -180,7 +180,7 @@ Questions to answer:
 - [x] Add line and column to token-based parser syntax errors.
 - [x] Add opening block location to unterminated block errors.
 - [x] Include source snippets in lexer delimiter syntax errors.
-- [ ] Include source snippets in parser syntax errors.
+- [x] Include source snippets in parser syntax errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -315,3 +315,5 @@ changes.
 - Added opening block line and column information to unterminated `if` and
   `for` block errors.
 - Added source line and caret snippets to lexer delimiter syntax errors.
+- Added source line and caret snippets to parser syntax errors when parser
+  source is available.
