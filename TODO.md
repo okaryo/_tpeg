@@ -178,6 +178,7 @@ Questions to answer:
 
 - [ ] Improve parse and render error classes.
 - [x] Add line and column to token-based parser syntax errors.
+- [x] Add opening block location to unterminated block errors.
 - [ ] Include source snippets in syntax errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
@@ -310,3 +311,5 @@ changes.
   tied to lexer tokens.
 - Added line and column information to parser validation errors for
   interpolation variables, filters, helper arguments, and render tag values.
+- Added opening block line and column information to unterminated `if` and
+  `for` block errors.

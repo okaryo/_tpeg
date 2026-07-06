@@ -24,6 +24,7 @@ This currently applies to:
 - invalid variable names
 - invalid filter names
 - invalid helper arguments
+- unterminated `if` and `for` blocks, reported at the opening block tag
 
 The parser uses token metadata from the lexer:
 
@@ -33,13 +34,12 @@ source -> lexer token(line, column) -> parser error
 
 ## Remaining Gaps
 
-Not all errors include source locations yet. Unterminated block errors currently
-know the block type, but they do not point back to the opening block location.
-Lexer delimiter errors also do not include a source snippet yet.
+Not all errors include source locations yet. Lexer delimiter errors do not
+include a source snippet yet, and render-time errors still report only the
+runtime value path or helper/filter name.
 
 Useful next improvements:
 
 - include source snippets and a caret marker
-- distinguish opening block locations from closing or missing block errors
 - add render-time locations for missing variables, unknown helpers, and unknown
   filters

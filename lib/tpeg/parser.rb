@@ -28,7 +28,7 @@ module Tpeg
 
     private
 
-    def parse_nodes(stop_at_end: false, block_name: nil)
+    def parse_nodes(stop_at_end: false, block_name: nil, opening_token: nil)
       nodes = []
 
       while current_token
@@ -43,7 +43,7 @@ module Tpeg
         nodes << consume_node
       end
 
-      raise SyntaxError, "unterminated #{block_name} block" if stop_at_end
+      syntax_error(opening_token, "unterminated #{block_name} block") if stop_at_end
 
       nodes
     end
@@ -81,7 +81,11 @@ module Tpeg
       condition = token.value.delete_prefix("if ").strip
       validate_variable_name(condition)
 
-      IfNode.new(**source_fields(token), condition: condition, children: parse_nodes(stop_at_end: true, block_name: "if"))
+      IfNode.new(
+        **source_fields(token),
+        condition: condition,
+        children: parse_nodes(stop_at_end: true, block_name: "if", opening_token: token)
+      )
     end
 
     def parse_for_node(token)
@@ -96,7 +100,7 @@ module Tpeg
         **source_fields(token),
         local_name: local_name,
         collection: collection,
-        children: parse_nodes(stop_at_end: true, block_name: "for")
+        children: parse_nodes(stop_at_end: true, block_name: "for", opening_token: token)
       )
     end
 

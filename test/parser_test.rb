@@ -190,7 +190,7 @@ class ParserTest < Minitest::Test
       parse("Hello {% if user %}")
     end
 
-    assert_equal "unterminated if block", error.message
+    assert_equal "unterminated if block at line 1, column 10", error.message
   end
 
   def test_raises_for_invalid_for_tag
@@ -230,7 +230,7 @@ class ParserTest < Minitest::Test
       parse("{% for item in items %}")
     end
 
-    assert_equal "unterminated for block", error.message
+    assert_equal "unterminated for block at line 1, column 4", error.message
   end
 
   private
