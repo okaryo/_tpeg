@@ -163,7 +163,7 @@ Questions to answer:
 
 - [x] Compare direct AST interpretation with generated Ruby code.
 - [x] Add an object-local parsed-template cache.
-- [ ] Explore compiled render methods or procs.
+- [x] Explore compiled render methods or procs and defer implementation.
 - [ ] Add small benchmarks.
 - [ ] Document tradeoffs and known limitations.
 
@@ -297,3 +297,6 @@ changes.
   through a loader.
 - Rewrote partial node cache lookup with an explicit `key?` check instead of
   `||=` so cache hit and miss behavior is easier to study.
+- Explored compiled render procs as a possible middle ground between AST
+  interpretation and generated Ruby, and deferred implementation until there is
+  a benchmark baseline.

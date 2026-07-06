@@ -58,3 +58,32 @@ become ordinary Ruby instructions, but it introduces new concerns:
 
 For this project, direct interpretation remains the default until there is a
 clear learning reason to generate Ruby.
+
+## Compiled Proc Direction
+
+A smaller step than generating Ruby source would be compiling nodes into a Ruby
+`Proc`.
+
+Conceptually:
+
+```text
+nodes -> proc -> rendered output
+```
+
+That proc would still be built by this engine, but it could avoid repeatedly
+dispatching on node classes during render. For example, a text node could become
+a proc step that appends a fixed string, and a variable node could become a proc
+step that performs a fixed lookup path.
+
+However, even a proc-based compiler has to answer the same questions as a full
+code generator:
+
+- How are filters and helpers captured?
+- How are partials loaded and cached?
+- How are source positions preserved for errors?
+- Does the compiled proc render into a string or stream into an output object?
+- What invalidates a compiled partial?
+
+The current implementation does not compile render procs yet. The next useful
+learning step is to measure the current direct interpreter first, so any
+compiled implementation has a concrete baseline to compare against.
