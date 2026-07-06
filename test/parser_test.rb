@@ -109,6 +109,19 @@ class ParserTest < Minitest::Test
     assert_text_node nodes[2], value: "!", start_offset: 27, end_offset: 28, line: 1, column: 28
   end
 
+  def test_parses_render_tag_with_value_path
+    nodes = parse("{% render card with user.profile %}")
+
+    assert_partial_node nodes[0],
+                        name: "card",
+                        local_name: "card",
+                        value_path: "user.profile",
+                        start_offset: 3,
+                        end_offset: 32,
+                        line: 1,
+                        column: 4
+  end
+
   def test_raises_for_empty_interpolation
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello, {{ }}!")
@@ -183,6 +196,14 @@ class ParserTest < Minitest::Test
     assert_equal 'invalid render tag: "render"', error.message
   end
 
+  def test_raises_for_invalid_render_value_path
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("{% render card with user..profile %}")
+    end
+
+    assert_equal 'invalid variable name: "user..profile"', error.message
+  end
+
   def test_raises_for_unterminated_for_block
     error = assert_raises(Tpeg::SyntaxError) do
       parse("{% for item in items %}")
@@ -231,9 +252,11 @@ class ParserTest < Minitest::Test
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 
-  def assert_partial_node(node, name:, start_offset:, end_offset:, line:, column:)
+  def assert_partial_node(node, name:, local_name: name, value_path: nil, start_offset:, end_offset:, line:, column:)
     assert_instance_of Tpeg::PartialNode, node
     assert_equal name, node.name
+    assert_equal local_name, node.local_name
+    value_path.nil? ? assert_nil(node.value_path) : assert_equal(value_path, node.value_path)
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 

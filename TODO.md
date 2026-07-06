@@ -285,3 +285,5 @@ changes.
   from left to right.
 - Added `Tpeg::HashLoader` as the first template loader abstraction.
 - Added `{% render name %}` partial rendering with the current render context.
+- Added `{% render name with value.path %}` for passing one explicit value into
+  a partial-local variable.

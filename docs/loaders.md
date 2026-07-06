@@ -61,5 +61,21 @@ The first partial implementation inherits the current render context. That means
 a partial can read the same top-level values as the caller, and a partial inside
 a loop can read the current loop local.
 
+Partials can also receive one explicit value:
+
+```ruby
+loader = Tpeg::HashLoader.new(
+  card: "{{ card.name }}"
+)
+
+Tpeg.render("{% render card with user %}", { user: { name: "Ruby" } }, loader: loader)
+# => "Ruby"
+```
+
+`with` resolves the right-hand side through the current `RenderContext` and
+stores it as a partial-local value using the partial name. In the example above,
+`user` is passed into the partial as `card`.
+
 File-backed loading, path normalization, extension handling, caching, explicit
-partial arguments, and context isolation are intentionally left for later steps.
+partial keyword arguments, and context isolation are intentionally left for later
+steps.

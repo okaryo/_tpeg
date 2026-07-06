@@ -101,7 +101,15 @@ module Tpeg
       raise Error, "loader is required to render partial: #{node.name}" if @loader.nil?
 
       source = @loader.load(node.name)
-      render_nodes(Parser.new(Lexer.new(source).tokens).nodes, render_context)
+      partial_context = partial_render_context(node, render_context)
+
+      render_nodes(Parser.new(Lexer.new(source).tokens).nodes, partial_context)
+    end
+
+    def partial_render_context(node, render_context)
+      return render_context if node.value_path.nil?
+
+      render_context.with_locals(node.local_name => render_context.lookup(node.value_path))
     end
 
     def truthy?(value)
