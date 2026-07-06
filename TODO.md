@@ -295,3 +295,5 @@ changes.
   nodes and can render repeatedly without reparsing its own source.
 - Added object-local partial node caching by partial name for templates rendered
   through a loader.
+- Rewrote partial node cache lookup with an explicit `key?` check instead of
+  `||=` so cache hit and miss behavior is easier to study.

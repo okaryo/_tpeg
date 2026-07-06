@@ -111,10 +111,10 @@ module Tpeg
     end
 
     def partial_nodes(name)
-      @partial_nodes_by_name[name] ||= begin
-        source = @loader.load(name)
-        Parser.new(Lexer.new(source).tokens).nodes
-      end
+      return @partial_nodes_by_name[name] if @partial_nodes_by_name.key?(name)
+
+      source = @loader.load(name)
+      @partial_nodes_by_name[name] = Parser.new(Lexer.new(source).tokens).nodes
     end
 
     def partial_render_context(node, render_context)
