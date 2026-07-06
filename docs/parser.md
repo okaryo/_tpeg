@@ -12,12 +12,13 @@ Current node types:
 - `IfNode`: a conditional block with a variable-path condition and child nodes.
 - `ForNode`: a loop block with a local variable name, collection path, and
   child nodes.
+- `PartialNode`: a request to load and render another template by name.
 
 For simple tokens, the parser maps token types to node types:
 
 - `:text` token -> `TextNode`
 - `:interpolation` token -> `VariableNode` or `HelperNode` with filters
-- supported `:tag` token -> `IfNode` or `ForNode`
+- supported `:tag` token -> `IfNode`, `ForNode`, or `PartialNode`
 
 Source positions are copied from tokens to nodes. This keeps later diagnostics
 able to point at the parsed value rather than re-reading the source.
@@ -27,6 +28,8 @@ tokens until the matching `end` tag and stores the nested content as child
 nodes. Nested `if` blocks are parsed recursively.
 `{% for item in items %}...{% end %}` is parsed into a `ForNode` in the same
 way.
+`{% render greeting %}` is parsed into a `PartialNode` that keeps the template
+name for the renderer.
 
 ## Current Scope
 
@@ -36,8 +39,8 @@ helper arguments, and invalid filter names are parsing errors. Context lookup an
 helper lookup still happen in the renderer, so missing variables and unknown
 helpers remain rendering errors.
 Unknown tag contents are parsing errors because the parser is the component that
-decides which control-flow syntax this engine supports. Invalid `for` tag syntax
-is also a parsing error.
+decides which tag syntax this engine supports. Invalid `for` and `render` tag
+syntax are also parsing errors.
 
 The renderer consumes parser nodes, so the current flow is:
 
@@ -52,4 +55,4 @@ context lookup.
 
 Useful next steps are:
 
-- Add another supported tag intentionally, such as `else`.
+- Add explicit partial arguments or context isolation.

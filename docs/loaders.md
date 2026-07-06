@@ -2,7 +2,7 @@
 
 Loaders resolve a template name to template source.
 
-They are the boundary needed before partial rendering:
+They are the boundary used by partial rendering:
 
 ```text
 template name -> loader -> template source
@@ -38,7 +38,7 @@ template not found: greeting
 
 ## Current Scope
 
-The loader does not render templates yet. It only returns source text.
+The loader itself does not render templates. It only returns source text.
 
 This keeps three responsibilities separate:
 
@@ -46,5 +46,20 @@ This keeps three responsibilities separate:
 - parser: turn source into nodes
 - renderer: render nodes with context
 
-File-backed loading, path normalization, extension handling, caching, and partial
-rendering are intentionally left for later steps.
+Partial rendering uses the loader through the `{% render name %}` tag:
+
+```ruby
+loader = Tpeg::HashLoader.new(
+  greeting: "Hello, {{ name }}!"
+)
+
+Tpeg.render("{% render greeting %}", { name: "Ruby" }, loader: loader)
+# => "Hello, Ruby!"
+```
+
+The first partial implementation inherits the current render context. That means
+a partial can read the same top-level values as the caller, and a partial inside
+a loop can read the current loop local.
+
+File-backed loading, path normalization, extension handling, caching, explicit
+partial arguments, and context isolation are intentionally left for later steps.

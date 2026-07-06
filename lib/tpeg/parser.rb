@@ -8,12 +8,14 @@ module Tpeg
   HelperNode = Struct.new(:name, :arguments, :filters, :start_offset, :end_offset, :line, :column, keyword_init: true)
   IfNode = Struct.new(:condition, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
   ForNode = Struct.new(:local_name, :collection, :children, :start_offset, :end_offset, :line, :column, keyword_init: true)
+  PartialNode = Struct.new(:name, :start_offset, :end_offset, :line, :column, keyword_init: true)
 
   class Parser
     VARIABLE_PATH = /\A[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*\z/.freeze
     FILTER_NAME = /\A[a-zA-Z_][a-zA-Z0-9_]*\z/.freeze
     HELPER_CALL = /\A([a-zA-Z_][a-zA-Z0-9_]*)\((.*)\)\z/.freeze
     FOR_TAG = /\Afor\s+([a-zA-Z_][a-zA-Z0-9_]*)\s+in\s+(.+)\z/.freeze
+    PARTIAL_TAG = /\Arender\s+([a-zA-Z_][a-zA-Z0-9_\/-]*)\z/.freeze
 
     def initialize(tokens)
       @tokens = tokens
@@ -69,6 +71,7 @@ module Tpeg
     def node_for_tag(token)
       return parse_if_node(token) if token.value.start_with?("if ")
       return parse_for_node(token) if token.value.start_with?("for ")
+      return parse_partial_node(token) if token.value == "render" || token.value.start_with?("render ")
 
       raise SyntaxError, "unknown tag: #{token.value.inspect}"
     end
@@ -94,6 +97,13 @@ module Tpeg
         collection: collection,
         children: parse_nodes(stop_at_end: true, block_name: "for")
       )
+    end
+
+    def parse_partial_node(token)
+      match = PARTIAL_TAG.match(token.value)
+      raise SyntaxError, "invalid render tag: #{token.value.inspect}" if match.nil?
+
+      PartialNode.new(**source_fields(token), name: match[1])
     end
 
     def current_token

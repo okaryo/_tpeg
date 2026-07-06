@@ -139,6 +139,27 @@ class TpegTest < Minitest::Test
     assert_equal "Ruby:Book A;Ruby:Book B;Go:Book A;Go:Book B;", Tpeg.render(template, context)
   end
 
+  def test_renders_partial_with_current_context
+    loader = Tpeg::HashLoader.new(greeting: "Hello, {{ name }}!")
+
+    assert_equal "Before Hello, Ruby! After", Tpeg.render("Before {% render greeting %} After", { name: "Ruby" }, loader: loader)
+  end
+
+  def test_renders_partial_with_current_loop_context
+    loader = Tpeg::HashLoader.new(item: "{{ item.name }};")
+    template = "{% for item in items %}{% render item %}{% end %}"
+
+    assert_equal "Ruby;Go;", Tpeg.render(template, { items: [{ name: "Ruby" }, { name: "Go" }] }, loader: loader)
+  end
+
+  def test_raises_when_rendering_partial_without_loader
+    error = assert_raises(Tpeg::Error) do
+      Tpeg.render("{% render greeting %}")
+    end
+
+    assert_equal "loader is required to render partial: greeting", error.message
+  end
+
   def test_raises_when_for_collection_is_not_iterable
     error = assert_raises(Tpeg::Error) do
       Tpeg.render("{% for item in items %}{{ item }}{% end %}", { items: 1 })

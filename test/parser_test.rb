@@ -101,6 +101,14 @@ class ParserTest < Minitest::Test
     assert_text_node nodes[0].children[0].children[0], value: "yes", start_offset: 43, end_offset: 46, line: 1, column: 44
   end
 
+  def test_parses_render_tag_into_partial_node
+    nodes = parse("Hello {% render greeting %}!")
+
+    assert_text_node nodes[0], value: "Hello ", start_offset: 0, end_offset: 6, line: 1, column: 1
+    assert_partial_node nodes[1], name: "greeting", start_offset: 9, end_offset: 24, line: 1, column: 10
+    assert_text_node nodes[2], value: "!", start_offset: 27, end_offset: 28, line: 1, column: 28
+  end
+
   def test_raises_for_empty_interpolation
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello, {{ }}!")
@@ -167,6 +175,14 @@ class ParserTest < Minitest::Test
     assert_equal 'invalid for tag: "for item items"', error.message
   end
 
+  def test_raises_for_invalid_render_tag
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse("{% render %}")
+    end
+
+    assert_equal 'invalid render tag: "render"', error.message
+  end
+
   def test_raises_for_unterminated_for_block
     error = assert_raises(Tpeg::SyntaxError) do
       parse("{% for item in items %}")
@@ -212,6 +228,12 @@ class ParserTest < Minitest::Test
     assert_instance_of Tpeg::ForNode, node
     assert_equal local_name, node.local_name
     assert_equal collection, node.collection
+    assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
+  end
+
+  def assert_partial_node(node, name:, start_offset:, end_offset:, line:, column:)
+    assert_instance_of Tpeg::PartialNode, node
+    assert_equal name, node.name
     assert_source_position node, start_offset: start_offset, end_offset: end_offset, line: line, column: column
   end
 

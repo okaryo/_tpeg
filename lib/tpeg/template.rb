@@ -10,10 +10,11 @@ require_relative "render_context"
 
 module Tpeg
   class Template
-    def initialize(source, filters: {}, helpers: {})
+    def initialize(source, filters: {}, helpers: {}, loader: nil)
       @source = String(source)
       @filters = Filters.registry(filters)
       @helpers = Helpers.registry(helpers)
+      @loader = loader
     end
 
     def render(context = {})
@@ -45,6 +46,8 @@ module Tpeg
         render_if(node, render_context)
       when ForNode
         render_for(node, render_context)
+      when PartialNode
+        render_partial(node, render_context)
       else
         raise Error, "unknown node type: #{node.class}"
       end
@@ -92,6 +95,13 @@ module Tpeg
       end
 
       output
+    end
+
+    def render_partial(node, render_context)
+      raise Error, "loader is required to render partial: #{node.name}" if @loader.nil?
+
+      source = @loader.load(node.name)
+      render_nodes(Parser.new(Lexer.new(source).tokens).nodes, render_context)
     end
 
     def truthy?(value)

@@ -149,7 +149,7 @@ Questions to answer:
 - [x] Decide how helpers are registered.
 - [x] Add a minimal helper call syntax.
 - [x] Add a template loader abstraction.
-- [ ] Implement partial rendering.
+- [x] Implement partial rendering.
 - [ ] Explore layout rendering if it remains useful.
 
 Questions to answer:
@@ -284,3 +284,4 @@ changes.
 - Documented and tested that multiple filters in one interpolation are applied
   from left to right.
 - Added `Tpeg::HashLoader` as the first template loader abstraction.
+- Added `{% render name %}` partial rendering with the current render context.
