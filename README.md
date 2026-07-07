@@ -13,14 +13,9 @@ errors, and deciding when compilation or caching is worth introducing.
 
 This project is for studying template engine internals step by step.
 
-The intended learning style is:
-
-- Build small pieces incrementally.
-- Confirm the learning objective before each major step.
-- Prefer understanding the mechanism over quickly adding features.
-- Compare behavior with Ruby's standard library and common template engines
-  when useful.
-- Keep the roadmap flexible as new questions and interests appear.
+This repository follows the learning-project approach described in
+`LEARNING_PROJECT.md`: small milestones, inspectable changes, and optional
+advanced topics after the core goal is met.
 
 The project assumes that the learner is already comfortable with Ruby and basic
 backend or Web development. Therefore, the focus is not on basic Ruby syntax or
@@ -64,6 +59,25 @@ The following are not the main focus of this project:
 Some production-oriented topics may still be explored when they help explain how
 real template engines behave.
 
+## Core Milestone
+
+The core learning milestone is complete. The current engine now demonstrates the
+main internal boundaries of a template engine:
+
+- Source scanning and lexing with line, column, and byte-offset metadata.
+- Parsing text, interpolation, control tags, filters, helpers, and partials into
+  explicit AST nodes.
+- Rendering with a scoped context, predictable hash-like lookup, default HTML
+  escaping, and explicit raw output.
+- Conditional blocks, loop blocks, custom filters, custom helpers, template
+  loaders, partial rendering, and object-local parsed-template caching.
+- Parser and render diagnostics with source locations and known limitations.
+- A focused ERB comparison showing generated Ruby execution versus `_tpeg`'s
+  AST interpretation.
+
+Further work is optional and should be treated as advanced exploration rather
+than required project completion.
+
 ## Approach
 
 The preferred starting point is a deliberately tiny template language:
@@ -78,9 +92,8 @@ The preferred starting point is a deliberately tiny template language:
 7. Explore conditionals, loops, helpers, partials, compilation, caching, and
    diagnostics.
 
-At each stage, the implementation should remain small enough to inspect and
-explain. When the design becomes unclear, the roadmap should be updated rather
-than treated as fixed.
+The detailed learning-project operating pattern is documented in
+`LEARNING_PROJECT.md`.
 
 ## Running the Current Engine
 
@@ -113,6 +126,7 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 
 - `README.md`: project purpose, scope, and high-level learning direction.
 - `AGENTS.md`: working instructions for AI agents and future contributors.
+- `LEARNING_PROJECT.md`: reusable AI-assisted learning project pattern.
 - `TODO.md`: living learning roadmap and progress tracker.
 - `docs/minimal-interpolation.md`: notes on the first plain text and
   interpolation rendering step.

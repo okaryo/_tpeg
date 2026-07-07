@@ -1,10 +1,8 @@
 # TODO
 
-This file is a living learning roadmap for the Ruby template engine
-implementation.
-
-The roadmap is intentionally flexible. Update it whenever the learning goal,
-implementation direction, or level of detail changes.
+This file is the living roadmap for the Ruby template engine implementation.
+See `LEARNING_PROJECT.md` for the reusable learning-project pattern behind this
+roadmap.
 
 ## Current Learning Goal
 
@@ -23,11 +21,23 @@ Initial focus:
 - Later exploration of control flow, helpers, partials, compilation, and
   caching.
 
+## Core Milestone Status
+
+Core milestone complete.
+
+The project has reached the original learning goal: build a small Ruby template
+engine and use it to study the main internal boundaries behind template systems.
+The implemented engine now covers source scanning, lexing, parsing, AST nodes,
+rendering context, escaping, control flow, filters, helpers, partials, caching,
+diagnostics, and a focused ERB comparison.
+
+Remaining work is optional advanced exploration. It should be started only when
+there is a specific learning question worth answering, not because the core
+project is incomplete.
+
 ## Roadmap
 
-Roadmap sections are learning themes, not single work units. When moving the
-project forward, advance by one small learning unit at a time unless a larger
-scope is explicitly requested.
+Roadmap sections are learning themes, not single work units.
 
 ### 0. Project Setup
 
@@ -205,16 +215,23 @@ Questions to answer:
 - How strict should the syntax be?
 - What limitations are intentional for learning clarity?
 
-### 10. Possible Next Learning Directions
+### 10. Optional Advanced Topics
 
-- [ ] Explore ERB-like Ruby code execution.
-- [ ] Explore Liquid-like safe templates for user-authored content.
-- [ ] Explore Mustache-like logic-less rendering.
-- [ ] Explore streaming rendered output.
-- [ ] Explore source maps or better debug output for compiled templates.
-- [ ] Compare performance and behavior with common Ruby template engines.
+- [ ] Explore ERB-like Ruby code execution if studying generated Ruby becomes
+  useful.
+- [ ] Explore Liquid-like safe templates if studying user-authored templates
+  becomes useful.
+- [ ] Explore Mustache-like logic-less rendering if studying minimal template
+  languages becomes useful.
+- [ ] Explore streaming rendered output if studying memory behavior or large
+  output becomes useful.
+- [ ] Explore source maps or better debug output if studying compiled templates
+  becomes useful.
+- [ ] Compare performance and behavior with common Ruby template engines only if
+  a specific comparison question appears.
 
-These are candidate directions, not a fixed plan.
+These are optional directions, not required steps. The core milestone is already
+complete.
 
 ## Learning Log
 
@@ -361,3 +378,5 @@ changes.
 - Decided not to add Liquid, Mustache, Haml, or Rails view comparisons for now;
   ERB is enough to contrast generated Ruby execution with `_tpeg`'s AST
   interpretation without adding dependencies.
+- Marked the core milestone complete. Future work is now framed as optional
+  advanced exploration rather than required roadmap completion.

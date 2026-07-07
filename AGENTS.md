@@ -61,4 +61,5 @@ performance tradeoffs.
   direction.
 - Add topic-specific notes under `docs/` once an implementation step creates a
   useful learning artifact.
-- Do not treat the roadmap as immutable.
+- Use `LEARNING_PROJECT.md` only as background for the reusable learning-project
+  pattern; keep this file focused on `_tpeg` execution guidance.
