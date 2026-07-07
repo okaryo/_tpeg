@@ -204,6 +204,16 @@ class TpegTest < Minitest::Test
     assert_equal "Ruby", Tpeg.render("{% render card with user as profile %}", context, loader: loader)
   end
 
+  def test_raises_for_missing_partial_value_with_node_location
+    loader = Tpeg::HashLoader.new(card: "{{ card.name }}")
+
+    error = assert_raises(Tpeg::MissingVariable) do
+      Tpeg.render("Hello, {% render card with user %}!", {}, loader: loader)
+    end
+
+    assert_equal "missing variable: user at line 1, column 11", error.message
+  end
+
   def test_raises_when_rendering_partial_without_loader
     error = assert_raises(Tpeg::Error) do
       Tpeg.render("{% render greeting %}")

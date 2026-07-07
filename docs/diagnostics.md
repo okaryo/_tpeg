@@ -72,6 +72,13 @@ location:
 missing variable: items at line 1, column 11
 ```
 
+Missing variables requested by partial `with` values include the render node
+location:
+
+```text
+missing variable: user at line 1, column 11
+```
+
 Unknown helpers and filters also include the interpolation node location:
 
 ```text
@@ -81,4 +88,5 @@ unknown filter: unknown at line 1, column 4
 
 Useful next improvements:
 
-- add render-time locations for missing variables used by partial arguments
+- split broad render errors into more specific error classes
+- document known diagnostic limitations

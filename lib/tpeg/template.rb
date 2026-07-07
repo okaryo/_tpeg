@@ -138,7 +138,7 @@ module Tpeg
     def partial_render_context(node, render_context)
       return render_context if node.value_path.nil?
 
-      render_context.with_locals(node.local_name => render_context.lookup(node.value_path))
+      render_context.with_locals(node.local_name => lookup_for_node(node.value_path, render_context, node))
     end
 
     def truthy?(value)
