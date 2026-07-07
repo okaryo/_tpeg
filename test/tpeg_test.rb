@@ -49,7 +49,7 @@ class TpegTest < Minitest::Test
       Tpeg.render("{{ name | unknown }}", { name: "Ruby" })
     end
 
-    assert_equal "unknown filter: unknown", error.message
+    assert_equal "unknown filter: unknown at line 1, column 4", error.message
   end
 
   def test_renders_with_custom_filter
@@ -89,7 +89,7 @@ class TpegTest < Minitest::Test
       Tpeg.render("{{ join(left, right) }}", { left: "Ruby", right: "Go" })
     end
 
-    assert_equal "unknown helper: join", error.message
+    assert_equal "unknown helper: join at line 1, column 4", error.message
   end
 
   def test_renders_if_block_when_condition_is_truthy

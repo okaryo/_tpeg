@@ -60,7 +60,7 @@ module Tpeg
 
     def render_interpolation(node, render_context)
       value = lookup_for_node(node.name, render_context, node)
-      render_value(value, node.filters)
+      render_value(value, node.filters, node)
     end
 
     def lookup_for_node(name, render_context, node)
@@ -71,21 +71,33 @@ module Tpeg
 
     def render_helper(node, render_context)
       arguments = node.arguments.map { |argument| render_context.lookup(argument) }
-      value = Helpers.call(node.name, arguments, @helpers)
+      value = call_helper_for_node(node, arguments)
 
-      render_value(value, node.filters)
+      render_value(value, node.filters, node)
     end
 
-    def render_value(value, filters)
+    def call_helper_for_node(node, arguments)
+      Helpers.call(node.name, arguments, @helpers)
+    rescue Error => error
+      raise unless error.message == "unknown helper: #{node.name}"
+
+      raise Error, "#{error.message} at line #{node.line}, column #{node.column}"
+    end
+
+    def render_value(value, filters, node)
       filters.each do |filter|
-        value = apply_filter(filter, value)
+        value = apply_filter_for_node(filter, value, node)
       end
 
       HtmlEscape.escape(value)
     end
 
-    def apply_filter(filter, value)
+    def apply_filter_for_node(filter, value, node)
       Filters.apply(filter, value, @filters)
+    rescue Error => error
+      raise unless error.message == "unknown filter: #{filter}"
+
+      raise Error, "#{error.message} at line #{node.line}, column #{node.column}"
     end
 
     def render_if(node, render_context)

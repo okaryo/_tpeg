@@ -182,6 +182,7 @@ Questions to answer:
 - [x] Include source snippets in lexer delimiter syntax errors.
 - [x] Include source snippets in parser syntax errors.
 - [x] Add node location to interpolation missing-variable errors.
+- [x] Add node location to unknown helper and filter render errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -320,3 +321,5 @@ changes.
   source is available.
 - Added line and column information to missing-variable errors raised while
   rendering interpolation nodes.
+- Added line and column information to unknown helper and filter errors raised
+  while rendering interpolation nodes.
