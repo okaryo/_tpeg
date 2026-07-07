@@ -41,10 +41,7 @@ Hello, {{ name
        ^
 ```
 
-## Remaining Gaps
-
-Render-time errors still report only the runtime value path or helper/filter
-name in some cases.
+## Render-Time Locations
 
 Missing variables requested by interpolation include the node location:
 
@@ -86,7 +83,23 @@ unknown helper: join at line 1, column 4
 unknown filter: unknown at line 1, column 4
 ```
 
+## Known Diagnostic Limitations
+
+The current block closing syntax is a generic `{% end %}` tag. This keeps the
+parser small, but it also means the parser cannot distinguish an `if` end from a
+`for` end. It can report unexpected or missing `end` tags, but it cannot report
+a typed mismatch such as "expected endfor but found endif" because those tags do
+not exist in the language yet.
+
+Render-time locations point to the AST node that requested the lookup or call.
+For helper arguments and partial `with` values, the location is the whole helper
+or render tag, not the exact argument span.
+
+Parser and lexer snippets show one source line with a caret. Multi-line spans,
+include stacks for partials, and nested render traces are not tracked yet.
+
 Useful next improvements:
 
 - split broad render errors into more specific error classes
-- document known diagnostic limitations
+- add typed block endings if studying block mismatch diagnostics becomes useful
+- add render-time source snippets or partial include stacks

@@ -190,9 +190,9 @@ Questions to answer:
 - [x] Add parser coverage for an unterminated outer nested block.
 - [x] Add parser coverage for an unterminated outer nested `for` block.
 - [x] Add parser coverage for an extra `end` after a closed block.
-- [ ] Add tests for malformed templates and nested block mismatches.
+- [x] Add tests for malformed templates and nested block boundaries.
 - [ ] Add behavior comparisons with existing Ruby template engines.
-- [ ] Document known limitations.
+- [x] Document known diagnostic limitations.
 
 Questions to answer:
 
@@ -344,3 +344,6 @@ changes.
   but the outer `for` remains unterminated.
 - Added parser test coverage for an extra `end` tag after a block has already
   been closed.
+- Documented diagnostic limitations: generic `{% end %}` prevents typed block
+  mismatch errors, render-time locations point to node-level spans, and snippets
+  are single-line only.
