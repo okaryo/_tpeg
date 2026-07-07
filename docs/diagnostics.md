@@ -44,9 +44,16 @@ Hello, {{ name
 ## Remaining Gaps
 
 Render-time errors still report only the runtime value path or helper/filter
-name. They do not yet point back to the node that requested the lookup or call.
+name in some cases.
+
+Missing variables requested by interpolation include the node location:
+
+```text
+missing variable: name at line 1, column 11
+```
 
 Useful next improvements:
 
-- add render-time locations for missing variables, unknown helpers, and unknown
-  filters
+- add render-time locations for missing variables used by `if`, `for`, helper
+  arguments, and partial arguments
+- add render-time locations for unknown helpers and unknown filters

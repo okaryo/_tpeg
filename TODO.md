@@ -181,6 +181,7 @@ Questions to answer:
 - [x] Add opening block location to unterminated block errors.
 - [x] Include source snippets in lexer delimiter syntax errors.
 - [x] Include source snippets in parser syntax errors.
+- [x] Add node location to interpolation missing-variable errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -317,3 +318,5 @@ changes.
 - Added source line and caret snippets to lexer delimiter syntax errors.
 - Added source line and caret snippets to parser syntax errors when parser
   source is available.
+- Added line and column information to missing-variable errors raised while
+  rendering interpolation nodes.

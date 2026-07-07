@@ -44,7 +44,7 @@ module Tpeg
       when TextNode
         node.value
       when VariableNode
-        render_interpolation(node.name, node.filters, render_context)
+        render_interpolation(node, render_context)
       when HelperNode
         render_helper(node, render_context)
       when IfNode
@@ -58,9 +58,15 @@ module Tpeg
       end
     end
 
-    def render_interpolation(name, filters, render_context)
-      value = render_context.lookup(name)
-      render_value(value, filters)
+    def render_interpolation(node, render_context)
+      value = lookup_for_node(node.name, render_context, node)
+      render_value(value, node.filters)
+    end
+
+    def lookup_for_node(name, render_context, node)
+      render_context.lookup(name)
+    rescue MissingVariable => error
+      raise MissingVariable, "#{error.message} at line #{node.line}, column #{node.column}"
     end
 
     def render_helper(node, render_context)

@@ -197,7 +197,17 @@ class TpegTest < Minitest::Test
       Tpeg.render("Hello, {{ name }}!")
     end
 
-    assert_equal "missing variable: name", error.message
+    assert_equal "missing variable: name at line 1, column 11", error.message
+  end
+
+  def test_raises_for_missing_variable_in_partial_with_partial_position
+    loader = Tpeg::HashLoader.new(greeting: "Hello, {{ name }}!")
+
+    error = assert_raises(Tpeg::MissingVariable) do
+      Tpeg.render("{% render greeting %}", {}, loader: loader)
+    end
+
+    assert_equal "missing variable: name at line 1, column 11", error.message
   end
 
   def test_raises_for_unterminated_interpolation
