@@ -59,6 +59,12 @@ location:
 missing variable: right at line 1, column 4
 ```
 
+Missing variables requested by `if` conditions include the `if` node location:
+
+```text
+missing variable: user at line 1, column 11
+```
+
 Unknown helpers and filters also include the interpolation node location:
 
 ```text
@@ -68,5 +74,5 @@ unknown filter: unknown at line 1, column 4
 
 Useful next improvements:
 
-- add render-time locations for missing variables used by `if`, `for`, and
-  partial arguments
+- add render-time locations for missing variables used by `for` and partial
+  arguments

@@ -184,6 +184,7 @@ Questions to answer:
 - [x] Add node location to interpolation missing-variable errors.
 - [x] Add node location to unknown helper and filter render errors.
 - [x] Add node location to helper argument missing-variable errors.
+- [x] Add node location to `if` condition missing-variable errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -326,3 +327,5 @@ changes.
   while rendering interpolation nodes.
 - Added line and column information to missing-variable errors raised while
   resolving helper arguments.
+- Added line and column information to missing-variable errors raised while
+  resolving `if` conditions.

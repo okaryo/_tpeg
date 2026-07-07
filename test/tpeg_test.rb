@@ -122,6 +122,14 @@ class TpegTest < Minitest::Test
     assert_equal "active", Tpeg.render(template, { user: { active: true } })
   end
 
+  def test_raises_for_missing_if_condition_with_node_location
+    error = assert_raises(Tpeg::MissingVariable) do
+      Tpeg.render("Hello, {% if user %}active{% end %}!")
+    end
+
+    assert_equal "missing variable: user at line 1, column 11", error.message
+  end
+
   def test_renders_for_block_for_each_item
     template = "{% for item in items %}{{ item.name }} {% end %}"
 

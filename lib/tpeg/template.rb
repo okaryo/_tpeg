@@ -101,7 +101,7 @@ module Tpeg
     end
 
     def render_if(node, render_context)
-      return "" unless truthy?(render_context.lookup(node.condition))
+      return "" unless truthy?(lookup_for_node(node.condition, render_context, node))
 
       render_nodes(node.children, render_context)
     end
