@@ -193,6 +193,16 @@ class ParserTest < Minitest::Test
     assert_equal "unterminated if block at line 1, column 10\nHello {% if user %}\n         ^", error.message
   end
 
+  def test_raises_for_unterminated_outer_if_block
+    source = "{% if user %}{% if user.active %}active{% end %}"
+
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse(source)
+    end
+
+    assert_equal "unterminated if block at line 1, column 4\n#{source}\n   ^", error.message
+  end
+
   def test_raises_for_invalid_for_tag
     error = assert_raises(Tpeg::SyntaxError) do
       parse("{% for item items %}{% end %}")

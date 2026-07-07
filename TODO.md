@@ -187,6 +187,7 @@ Questions to answer:
 - [x] Add node location to `if` condition missing-variable errors.
 - [x] Add node location to `for` collection missing-variable errors.
 - [x] Add node location to partial value missing-variable errors.
+- [x] Add parser coverage for an unterminated outer nested block.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -335,3 +336,5 @@ changes.
   resolving `for` collections.
 - Added line and column information to missing-variable errors raised while
   resolving partial `with` values.
+- Added parser test coverage for a nested block where the inner `if` is closed
+  but the outer `if` remains unterminated.
