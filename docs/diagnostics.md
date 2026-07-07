@@ -52,6 +52,13 @@ Missing variables requested by interpolation include the node location:
 missing variable: name at line 1, column 11
 ```
 
+Missing variables requested as helper arguments include the helper node
+location:
+
+```text
+missing variable: right at line 1, column 4
+```
+
 Unknown helpers and filters also include the interpolation node location:
 
 ```text
@@ -61,5 +68,5 @@ unknown filter: unknown at line 1, column 4
 
 Useful next improvements:
 
-- add render-time locations for missing variables used by `if`, `for`, helper
-  arguments, and partial arguments
+- add render-time locations for missing variables used by `if`, `for`, and
+  partial arguments

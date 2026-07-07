@@ -70,7 +70,7 @@ module Tpeg
     end
 
     def render_helper(node, render_context)
-      arguments = node.arguments.map { |argument| render_context.lookup(argument) }
+      arguments = node.arguments.map { |argument| lookup_for_node(argument, render_context, node) }
       value = call_helper_for_node(node, arguments)
 
       render_value(value, node.filters, node)

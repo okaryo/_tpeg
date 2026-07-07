@@ -92,6 +92,18 @@ class TpegTest < Minitest::Test
     assert_equal "unknown helper: join at line 1, column 4", error.message
   end
 
+  def test_raises_for_missing_helper_argument_with_node_location
+    helpers = {
+      join: ->(left, right) { "#{left}:#{right}" }
+    }
+
+    error = assert_raises(Tpeg::MissingVariable) do
+      Tpeg.render("{{ join(left, right) }}", { left: "Ruby" }, helpers: helpers)
+    end
+
+    assert_equal "missing variable: right at line 1, column 4", error.message
+  end
+
   def test_renders_if_block_when_condition_is_truthy
     assert_equal "Hello, Ruby!", Tpeg.render("Hello, {% if user %}{{ user.name }}{% end %}!", { user: { name: "Ruby" } })
   end
