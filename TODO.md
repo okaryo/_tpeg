@@ -193,7 +193,9 @@ Questions to answer:
 - [x] Add tests for malformed templates and nested block boundaries.
 - [x] Add an ERB behavior comparison note.
 - [x] Add an executable ERB behavior comparison example.
-- [ ] Add behavior comparisons with existing Ruby template engines.
+- [x] Add a first behavior comparison with an existing Ruby template engine.
+- [x] Decide not to add Liquid, Mustache, Haml, or Rails view comparisons for
+  now.
 - [x] Document known diagnostic limitations.
 
 Questions to answer:
@@ -353,3 +355,9 @@ changes.
   escaping, control flow, and safety boundaries.
 - Added `examples/erb_comparison.rb` so the ERB and `_tpeg` behavior differences
   can be reproduced with Ruby's standard library.
+- Clarified that ERB is the first existing-engine comparison because it is part
+  of Ruby's standard library; comparisons with Liquid, Mustache, Haml, or Rails
+  views should be explicit future choices.
+- Decided not to add Liquid, Mustache, Haml, or Rails view comparisons for now;
+  ERB is enough to contrast generated Ruby execution with `_tpeg`'s AST
+  interpretation without adding dependencies.

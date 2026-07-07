@@ -9,6 +9,11 @@ Run the executable comparison:
 ruby -Ilib examples/erb_comparison.rb
 ```
 
+This comparison starts with ERB because it is available in Ruby's standard
+library. The project does not currently add Liquid, Mustache, Haml, or Rails
+view comparisons; ERB is enough to contrast generated Ruby execution with
+`_tpeg`'s AST interpretation without introducing more dependencies.
+
 ## Evaluation Model
 
 ERB templates contain Ruby code:
