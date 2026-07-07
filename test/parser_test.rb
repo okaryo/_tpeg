@@ -185,6 +185,16 @@ class ParserTest < Minitest::Test
     assert_equal "unexpected end tag at line 1, column 10\nHello {% end %}\n         ^", error.message
   end
 
+  def test_raises_for_extra_end_tag_after_closed_block
+    source = "{% if user %}ok{% end %}{% end %}"
+
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse(source)
+    end
+
+    assert_equal "unexpected end tag at line 1, column 28\n#{source}\n                           ^", error.message
+  end
+
   def test_raises_for_unterminated_if_block
     error = assert_raises(Tpeg::SyntaxError) do
       parse("Hello {% if user %}")

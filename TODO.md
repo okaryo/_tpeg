@@ -189,6 +189,7 @@ Questions to answer:
 - [x] Add node location to partial value missing-variable errors.
 - [x] Add parser coverage for an unterminated outer nested block.
 - [x] Add parser coverage for an unterminated outer nested `for` block.
+- [x] Add parser coverage for an extra `end` after a closed block.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -341,3 +342,5 @@ changes.
   but the outer `if` remains unterminated.
 - Added parser test coverage for a nested block where the inner `for` is closed
   but the outer `for` remains unterminated.
+- Added parser test coverage for an extra `end` tag after a block has already
+  been closed.
