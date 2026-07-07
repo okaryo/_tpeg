@@ -107,7 +107,7 @@ module Tpeg
     end
 
     def render_for(node, render_context)
-      collection = render_context.lookup(node.collection)
+      collection = lookup_for_node(node.collection, render_context, node)
       return "" if collection.nil?
       raise Error, "for collection must respond to each: #{node.collection}" unless collection.respond_to?(:each)
 

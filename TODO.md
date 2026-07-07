@@ -185,6 +185,7 @@ Questions to answer:
 - [x] Add node location to unknown helper and filter render errors.
 - [x] Add node location to helper argument missing-variable errors.
 - [x] Add node location to `if` condition missing-variable errors.
+- [x] Add node location to `for` collection missing-variable errors.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -329,3 +330,5 @@ changes.
   resolving helper arguments.
 - Added line and column information to missing-variable errors raised while
   resolving `if` conditions.
+- Added line and column information to missing-variable errors raised while
+  resolving `for` collections.

@@ -159,6 +159,14 @@ class TpegTest < Minitest::Test
     assert_equal "Ruby:Book A;Ruby:Book B;Go:Book A;Go:Book B;", Tpeg.render(template, context)
   end
 
+  def test_raises_for_missing_for_collection_with_node_location
+    error = assert_raises(Tpeg::MissingVariable) do
+      Tpeg.render("Hello, {% for item in items %}{{ item }}{% end %}!")
+    end
+
+    assert_equal "missing variable: items at line 1, column 11", error.message
+  end
+
   def test_renders_partial_with_current_context
     loader = Tpeg::HashLoader.new(greeting: "Hello, {{ name }}!")
 
