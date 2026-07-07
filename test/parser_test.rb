@@ -243,6 +243,16 @@ class ParserTest < Minitest::Test
     assert_equal "unterminated for block at line 1, column 4\n{% for item in items %}\n   ^", error.message
   end
 
+  def test_raises_for_unterminated_outer_for_block
+    source = "{% for item in items %}{% for book in books %}{{ book.title }}{% end %}"
+
+    error = assert_raises(Tpeg::SyntaxError) do
+      parse(source)
+    end
+
+    assert_equal "unterminated for block at line 1, column 4\n#{source}\n   ^", error.message
+  end
+
   private
 
   def parse(source)

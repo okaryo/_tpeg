@@ -188,6 +188,7 @@ Questions to answer:
 - [x] Add node location to `for` collection missing-variable errors.
 - [x] Add node location to partial value missing-variable errors.
 - [x] Add parser coverage for an unterminated outer nested block.
+- [x] Add parser coverage for an unterminated outer nested `for` block.
 - [ ] Add tests for malformed templates and nested block mismatches.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [ ] Document known limitations.
@@ -338,3 +339,5 @@ changes.
   resolving partial `with` values.
 - Added parser test coverage for a nested block where the inner `if` is closed
   but the outer `if` remains unterminated.
+- Added parser test coverage for a nested block where the inner `for` is closed
+  but the outer `for` remains unterminated.
