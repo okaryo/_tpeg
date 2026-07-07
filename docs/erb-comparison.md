@@ -3,6 +3,12 @@
 ERB is Ruby's standard template engine. Comparing `_tpeg` with ERB is useful
 because ERB takes a very different implementation path.
 
+Run the executable comparison:
+
+```sh
+ruby -Ilib examples/erb_comparison.rb
+```
+
 ## Evaluation Model
 
 ERB templates contain Ruby code:

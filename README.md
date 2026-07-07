@@ -98,6 +98,12 @@ Run the tests:
 ruby -Itest -Ilib -e 'Dir["test/**/*_test.rb"].sort.each { |path| load path }'
 ```
 
+Run the ERB behavior comparison example:
+
+```sh
+ruby -Ilib examples/erb_comparison.rb
+```
+
 The renderer walks through the template source, copies plain text unchanged,
 and replaces simple interpolation markers such as `{{ name }}` from a
 hash-like context. Missing variables and malformed interpolation markers raise
@@ -123,3 +129,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/compilation-and-caching.md`: notes on AST interpretation and caching.
 - `docs/diagnostics.md`: notes on error messages and source locations.
 - `docs/erb-comparison.md`: notes comparing `_tpeg` behavior with Ruby's ERB.
+- `examples/erb_comparison.rb`: executable ERB and `_tpeg` behavior comparison.

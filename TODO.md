@@ -192,6 +192,7 @@ Questions to answer:
 - [x] Add parser coverage for an extra `end` after a closed block.
 - [x] Add tests for malformed templates and nested block boundaries.
 - [x] Add an ERB behavior comparison note.
+- [x] Add an executable ERB behavior comparison example.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [x] Document known diagnostic limitations.
 
@@ -350,3 +351,5 @@ changes.
   are single-line only.
 - Added an ERB comparison note covering evaluation model, missing values,
   escaping, control flow, and safety boundaries.
+- Added `examples/erb_comparison.rb` so the ERB and `_tpeg` behavior differences
+  can be reproduced with Ruby's standard library.
