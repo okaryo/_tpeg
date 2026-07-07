@@ -191,6 +191,7 @@ Questions to answer:
 - [x] Add parser coverage for an unterminated outer nested `for` block.
 - [x] Add parser coverage for an extra `end` after a closed block.
 - [x] Add tests for malformed templates and nested block boundaries.
+- [x] Add an ERB behavior comparison note.
 - [ ] Add behavior comparisons with existing Ruby template engines.
 - [x] Document known diagnostic limitations.
 
@@ -347,3 +348,5 @@ changes.
 - Documented diagnostic limitations: generic `{% end %}` prevents typed block
   mismatch errors, render-time locations point to node-level spans, and snippets
   are single-line only.
+- Added an ERB comparison note covering evaluation model, missing values,
+  escaping, control flow, and safety boundaries.

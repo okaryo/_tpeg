@@ -122,3 +122,4 @@ explicit `Tpeg` errors instead of silently rendering empty output.
 - `docs/layouts.md`: notes on deferring layout rendering and why.
 - `docs/compilation-and-caching.md`: notes on AST interpretation and caching.
 - `docs/diagnostics.md`: notes on error messages and source locations.
+- `docs/erb-comparison.md`: notes comparing `_tpeg` behavior with Ruby's ERB.
